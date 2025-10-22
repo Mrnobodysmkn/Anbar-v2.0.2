@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>مدیریت انبار - نسخه نهایی</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+.d-calendar{display:block;direction:rtl;width:250px;background-color:#fff;border-radius:4px;border:1px solid #ddd}.d-calendar[data-lang=en]{direction:ltr}.d-calendar .d-calendar-week{display:flex;padding:10px 0;border-bottom:1px solid #ddd}.d-calendar .d-calendar-week span{flex-basis:100%;text-align:center;font-size:13px;font-weight:500;color:#333}.d-calendar .d-calendar-days{display:flex;flex-wrap:wrap;padding:10px 0}.d-calendar .d-calendar-days span,.d-calendar .d-calendar-days button{flex-basis:14.2%;text-align:center;font-size:13px;font-weight:400;height:30px;line-height:30px;color:#333}.d-calendar .d-calendar-days button{cursor:pointer;background-color:transparent;border:1px solid transparent;outline:none;border-radius:50%}.d-calendar .d-calendar-days button:hover{background-color:#eee;border:1px solid #ddd}.d-calendar .d-calendar-days button:focus{background-color:#eee;border:1px solid #ccc}.d-calendar .d-calendar-days .d-calendar-today{background-color:#333;color:#fff;border:1px solid #333}.d-calendar-picker{display:inline-block;position:relative}.d-calendar-picker-main{position:absolute;outline:none;top:100%;left:50%;transform:translate(-50%,5px);z-index:9999}.d-calendar-picker-header{display:flex;align-items:center;justify-content:center;position:relative;padding:10px;background-color:#fff;border-top-left-radius:4px;border-top-right-radius:4px;border:1px solid #ddd;border-bottom:none}.d-calendar-picker-header h4{margin:0;font-size:14px;font-weight:500;color:#333}.d-calendar-picker-header button{display:block;width:30px;height:30px;border-radius:50%;border:1px solid transparent;background-color:transparent;position:absolute;top:50%;transform:translateY(-50%);cursor:pointer;outline:none}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-prev{left:5px}.d-calendar-picker-header .d-calendar-picker-prev{right:5px}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-next{right:5px}.d-calendar-picker-header .d-calendar-picker-next{left:5px}.d-calendar-picker-header button:hover{background-color:#eee;border:1px solid #ddd}.d-calendar-picker-header button:focus{background-color:#eee;border:1px solid #ccc}.d-calendar-picker-header button i{display:block;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;margin:0 auto}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-prev i{border-right:5px solid #333}.d-calendar-picker-header .d-calendar-picker-prev i{border-left:5px solid #333}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-next i{border-left:5px solid #333}.d-calendar-picker-header .d-calendar-picker-next i{border-right:5px solid #333}
+</style>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root {
+    --bg-color: #000000; --app-bg: #111111; --card-bg: rgba(38, 38, 40, 0.6);
+    --border-color: rgba(80, 80, 80, 0.4); --text-primary: #ffffff; --text-secondary: #a0a0a5;
+    --accent-blue-start: #007aff; --accent-blue-end: #0a84ff; --alert-red: #ff453a;
+  }
+  @keyframes fluid-background {
+    0% { transform: translate(-10%, -10%) rotate(0deg); } 25% { transform: translate(10%, -10%) rotate(10deg); }
+    50% { transform: translate(10%, 10%) rotate(0deg); } 75% { transform: translate(-10%, 10%) rotate(-10deg); }
+    100% { transform: translate(-10%, -10%) rotate(0deg); }
+  }
+  body { background-color: var(--bg-color); font-family: 'Vazirmatn', sans-serif; color: var(--text-primary); padding: 12px; overscroll-behavior: none; }
+  #app-frame { background-color: var(--app-bg); border-radius: 40px; height: calc(100dvh - 24px); position: relative; overflow: hidden; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
+  #app-frame::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0, 122, 255, 0.15) 0%, transparent 40%), radial-gradient(circle, rgba(52, 199, 89, 0.15) 50%, transparent 80%); animation: fluid-background 25s ease-in-out infinite; z-index: 0; }
+  .content-wrapper { position: relative; z-index: 1; backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px); height: 100%; display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+  .glass-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); }
+  .action-btn { position: relative; overflow: hidden; padding: 16px; border-radius: 20px; font-weight: 700; color: var(--text-primary); border: 1px solid var(--border-color); box-shadow: 0px 5px 10px rgba(0,0,0,0.2), inset 0px 1px 1px rgba(255,255,255,0.1); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); transform-style: preserve-3d; text-align: center; font-size: 1.1rem; }
+  .action-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0px 10px 20px rgba(0,0,0,0.3), inset 0px 1px 1px rgba(255,255,255,0.1); }
+  .btn-primary { background-image: linear-gradient(135deg, var(--accent-blue-start), var(--accent-blue-end)); }
+  .btn-secondary { background-color: rgba(60, 60, 67, 0.7); }
+  @keyframes shimmer-glow { 0% { transform: translateX(-150%) skewX(-30deg); opacity: 0.5; } 50% { transform: translateX(150%) skewX(-30deg); opacity: 1; } 100% { transform: translateX(300%) skewX(-30deg); opacity: 0.5; } }
+  .action-btn::after { content: ''; position: absolute; top: 0; left: 0; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent); animation: shimmer-glow 4s ease-in-out infinite; }
+  .section-content { display: none; }
+  .section-content.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .form-input-group { position: relative; }
+  .form-input-unit { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 0.9rem; }
+  .expiry-alert { border-left: 4px solid var(--alert-red); }
+</style>
+</head>
+<body>
+
+<div id="app-frame">
+  <div class="content-wrapper">
+    <header class="p-6 pt-8">
+        <div class="glass-card p-4">
+            <div class="flex justify-between items-center">
+                <div class="text-left flex-1"><p id="header-date" class="text-xs text-text-secondary font-medium"></p></div>
+                <div class="text-center flex-1"><h1 class="text-2xl font-extrabold" style="background: -webkit-linear-gradient(45deg, #eee, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">مدیریت انبار</h1></div>
+                <div class="text-right flex-1"><p class="text-xs text-text-secondary font-medium">نسخه نهایی</p></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto px-6 pb-6">
+        <div id="home-screen" class="section-content active">
+             <div class="grid grid-cols-1 gap-4">
+                <button data-target="dashboard" class="action-btn btn-primary flex items-center justify-center gap-2"><span>🏠</span><span>داشبورد</span></button>
+                <button data-target="inventory" class="action-btn btn-secondary flex items-center justify-center gap-2"><span>📦</span><span>موجودی</span></button>
+                <button data-target="add" class="action-btn btn-secondary flex items-center justify-center gap-2"><span>افزودن کالا</span><span class="font-bold text-2xl">+</span></button>
+                <button data-target="scan" class="action-btn btn-secondary flex items-center justify-center gap-2"><span>📷</span><span>اسکن بارکد</span></button>
+                <button data-target="report" class="action-btn btn-secondary flex items-center justify-center gap-2"><span>📊</span><span>گزارش</span></button>
+                <div class="grid grid-cols-2 gap-4">
+                    <button data-target="import-excel" class="action-btn btn-secondary flex items-center justify-center gap-2 text-sm px-2 h-20"><span>📄</span><span>ورود کالا با اکسل</span></button>
+                    <button data-target="backup" class="action-btn btn-secondary flex items-center justify-center gap-2 text-sm px-2 h-20"><span>💾</span><span>پشتیبان‌گیری</span></button>
+                </div>
+            </div>
+        </div>
+        
+        <div data-id="dashboard" class="section-content"></div>
+        <div data-id="inventory" class="section-content"></div>
+        <div data-id="add" class="section-content"></div>
+        <div data-id="scan" class="section-content"></div>
+        <div data-id="report" class="section-content"></div>
+        <div data-id="import-excel" class="section-content"></div>
+        <div data-id="backup" class="section-content"></div>
+        
+        <div id="back-button-container" class="mt-6 text-center" style="display: none;">
+            <button id="back-to-home" class="action-btn btn-secondary w-full max-w-xs mx-auto">بازگشت به منو</button>
+        </div>
+    </main>
+  </div>
+</div>
+
+<script>(function(global,factory){typeof exports==='object'&&typeof module!=='undefined'?module.exports=factory():typeof define==='function'&&define.amd?define(factory):global.dCalendar=factory()})(this,function(){'use strict';var dCalendar=function(){};return dCalendar.prototype.getToday=function(config){var date=new Date,today={year:date.getFullYear(),month:date.getMonth()+1,day:date.getDate()};return config&&config.lang!=='en'?this.convertTo(config.lang,today.year,today.month,today.day):today},dCalendar.prototype.picker=function(config){var _this=this;if(typeof config==='undefined'||typeof config.target==='undefined'||!config.target)return void console.warn('%cD-CALENDAR%c -> "target" is required.','color: #c60f0f; font-weight: bold;','color: #333; font-weight: normal;');config.lang=config.lang||'en',config.format=config.format||'yyyy/mm/dd';var target=document.querySelector(config.target);if(target===null)return void console.warn('%cD-CALENDAR%c -> "target" not found.','color: #c60f0f; font-weight: bold;','color: #333; font-weight: normal;');target.style.display='none',target.parentElement.classList.add('d-calendar-picker');var main=document.createElement('div');main.className='d-calendar-picker-main',main.setAttribute('tabindex',0);var header=document.createElement('div');header.className='d-calendar-picker-header',main.appendChild(header);var content=document.createElement('div');content.className='d-calendar-picker-content',main.appendChild(content);var calendar=_this.create(config),months=_this.getMonths(config.lang);header.innerHTML='<h4>'+months[calendar.month-1]+' '+calendar.year+'</h4>',content.appendChild(calendar.calendar),target.parentElement.appendChild(main),main.focus();var prev=document.createElement('button');prev.type='button',prev.className='d-calendar-picker-prev',prev.innerHTML='<i></i>',header.appendChild(prev);var next=document.createElement('button');next.type='button',next.className='d-calendar-picker-next',next.innerHTML='<i></i>',header.appendChild(next),prev.onclick=function(){var data={year:calendar.month===1?calendar.year-1:calendar.year,month:calendar.month>1?calendar.month-1:12,lang:config.lang};calendar=_this.create(data),header.innerHTML='<h4>'+months[calendar.month-1]+' '+calendar.year+'</h4>',header.appendChild(prev),header.appendChild(next),content.innerHTML='',content.appendChild(calendar.calendar)},next.onclick=function(){var data={year:calendar.month===12?calendar.year+1:calendar.year,month:calendar.month<12?calendar.month+1:1,lang:config.lang};calendar=_this.create(data),header.innerHTML='<h4>'+months[calendar.month-1]+' '+calendar.year+'</h4>',header.appendChild(prev),header.appendChild(next),content.innerHTML='',content.appendChild(calendar.calendar)},content.onclick=function(e){e.stopPropagation();if(e.target.tagName==='BUTTON'&&e.target.hasAttribute('data-day')){var day=e.target.getAttribute('data-day'),date={year:calendar.year,month:calendar.month,day:parseInt(day)};date.month<10&&(date.month='0'+date.month),date.day<10&&(date.day='0'+date.day);var value=config.format;value=value.replace('yyyy',date.year),value=value.replace('mm',date.month),value=value.replace('dd',date.day),target.value=value,main.remove(),target.style.display='block';if(config.done)return config.done(date)}},main.onblur=function(e){e.stopPropagation(),main.remove(),target.style.display='block'}},dCalendar.prototype.create=function(config){config||(config={});var today=this.getToday(config),year=config.year||today.year,month=config.month||today.month,lang=config.lang||'en';if(typeof year!=='number'||typeof month!=='number'||year<1||month<1||month>12)return void console.warn('%cD-CALENDAR%c -> Invalid date.','color: #c60f0f; font-weight: bold;','color: #333; font-weight: normal;');var main=document.createElement('div');main.className='d-calendar',main.setAttribute('data-lang',lang);for(var weekDays=this.getWeekDays(lang),week=document.createElement('div'),i=0;i<weekDays.length;i++)week.innerHTML+='<span>'+weekDays[i]+'</span>';week.className='d-calendar-week',main.appendChild(week);var num=this.getNumOfDays(lang,year,month),firstDay=num.firstDay,days=document.createElement('div');days.className='d-calendar-days';for(var i=firstDay;i>1;i--)days.innerHTML+='<span></span>';for(var i=1;i<=num.days;i++){var className='';i===today.day&&month===today.month&&year===today.year&&(className+=' d-calendar-today'),days.innerHTML+='<button type="button" class="'+className+'" data-day="'+i+'">'+i+'</button>'}return main.appendChild(days),{year:year,month:month,calendar:main}},dCalendar.prototype.getNumOfDays=function(lang,year,month){var date=this.convertTo('en',year,month,1),firstDay,days;if(lang==='fa'||lang==='ar'){var jdate=this.convertTo('fa',year,month,1),num=[31,31,31,31,31,31,30,30,30,30,30,this.isLeap(date.year+1)?30:29];firstDay=this.getWeekDay(date),days=num[jdate.month-1]}else{var num=[31,this.isLeap(year)?29:28,31,30,31,30,31,31,30,31,30,31];firstDay=this.getWeekDay(date),days=num[month-1]}return{days:days,firstDay:firstDay}},dCalendar.prototype.isLeap=function(year){if(typeof year!=='number'||year<1);else return year%4===0&&year%100!==0||year%400===0},dCalendar.prototype.getWeekDay=function(date){if(typeof date!=='object');else return new Date(date.year,date.month-1,date.day).getDay()||7},dCalendar.prototype.convertTo=function(lang,year,month,day){var gYear=year,gMonth=month,gDay=day,jYear=year,jMonth=month,jDay=day,gDays=[0,31,59,90,120,151,181,212,243,273,304,334],jDays=[0,31,62,93,124,155,186,216,246,276,306,336];if(lang==='fa'||lang==='ar'){for(var i,gDayOfYear=gDays[gMonth-1]+gDay,jDayOfYear=gDayOfYear-79,i=0;this.isLeap(gYear)&&gMonth>2&&gDayOfYear++,jDayOfYear<=0?(jDayOfYear=jDayOfYear+365+(this.isLeap(gYear-1)?1:0),jYear=gYear-622):jYear=gYear-621,jDayOfYear>(this.isLeap(jYear)?366:365)&&(jDayOfYear=jDayOfYear-(this.isLeap(jYear)?366:365),jYear++),i<12;i++)if(jDayOfYear<=jDays[i]){jDay=jDayOfYear-(i>0?jDays[i-1]:0),jMonth=i;break}return{year:jYear,month:jMonth,day:jDay}}if(lang==='en'){for(var i,jDayOfYear=(jMonth-1)*31+jDay,gDayOfYear=jDayOfYear+79,i=0;jMonth>7&&(jDayOfYear-=jMonth-7),jYear+=this.isLeap(jYear-1)?1:0,gDayOfYear>365?(gDayOfYear=gDayOfYear-(365+(this.isLeap(jYear)?1:0)),gYear=jYear+622):gYear=jYear+621,i<12;i++){var gDaysNum=gDays[i]+(i>1&&this.isLeap(gYear)?1:0);if(gDayOfYear<=gDaysNum){gDay=gDayOfYear-(i>0?gDays[i-1]:0),gMonth=i;break}}return{year:gYear,month:gMonth,day:gDay}}return{year:year,month:month,day:day}},dCalendar.prototype.getMonths=function(lang){return lang==='fa'?['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند']:lang==='ar'?['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']:['January','February','March','April','May','June','July','August','September','October','November','December']},dCalendar.prototype.getWeekDays=function(lang){return lang==='fa'?['ش','ی','د','س','چ','پ','ج']:lang==='ar'?['الأحد','الأثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت']:['Mo','Tu','We','Th','Fr','Sa','Su']},new dCalendar});</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- DATA MANAGEMENT ---
+    const KEY_BATCHES = 'wh_final_batches_v4';
+    const KEY_CATEGORIES = 'wh_final_categories_v4';
+    let batches = [];
+    let categories = ['بهداشتی و شوینده', 'خوراکی', 'ابزارآلات', 'لوازم التحریر'];
+
+    function save() {
+        localStorage.setItem(KEY_BATCHES, JSON.stringify(batches));
+        localStorage.setItem(KEY_CATEGORIES, JSON.stringify(categories));
+    }
+
+    function load() {
+        batches = JSON.parse(localStorage.getItem(KEY_BATCHES) || '[]');
+        const savedCategories = JSON.parse(localStorage.getItem(KEY_CATEGORIES) || 'null');
+        if (savedCategories) categories = savedCategories;
+    }
+
+    // --- UTILITIES ---
+    function getJalaliDate() {
+        const date = new Date();
+        const year = new Intl.DateTimeFormat('fa-IR-u-nu-latn', { year: 'numeric' }).format(date);
+        const month = new Intl.DateTimeFormat('fa-IR-u-nu-latn', { month: 'long' }).format(date);
+        const seasons = { 'فروردین': 'بهار', 'اردیبهشت': 'بهار', 'خرداد': 'بهار', 'تیر': 'تابستان', 'مرداد': 'تابستان', 'شهریور': 'تابستان', 'مهر': 'پاییز', 'آبان': 'پاییز', 'آذر': 'پاییز', 'دی': 'زمستان', 'بهمن': 'زمستان', 'اسفند': 'زمستان'};
+        return `${seasons[month]} ${year}`;
+    }
+    
+    function parseJalaliDate(jalaliStr) {
+        if (!jalaliStr) return null;
+        const [year, month, day] = jalaliStr.split('/').map(Number);
+        if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
+        let gYear = year + 621;
+        return new Date(gYear, month - 1, day);
+    }
+
+    // --- UI NAVIGATION ---
+    const homeScreen = document.getElementById('home-screen');
+    const backButtonContainer = document.getElementById('back-button-container');
+    
+    function showSection(targetId) {
+        homeScreen.classList.remove('active');
+        document.querySelectorAll('.section-content[data-id]').forEach(el => el.classList.remove('active'));
+        const targetSection = document.querySelector(`.section-content[data-id="${targetId}"]`);
+        
+        if (targetSection) {
+            targetSection.innerHTML = getSectionContent(targetId);
+            targetSection.classList.add('active');
+            backButtonContainer.style.display = 'block';
+            attachEventListeners(targetId);
+        }
+    }
+
+    function showHomeScreen() {
+        document.querySelectorAll('.section-content[data-id]').forEach(el => { el.classList.remove('active'); el.innerHTML = ''; });
+        homeScreen.classList.add('active');
+        backButtonContainer.style.display = 'none';
+        updateHeader();
+    }
+
+    document.querySelectorAll('.action-btn[data-target]').forEach(btn => btn.addEventListener('click', () => showSection(btn.dataset.target)));
+    document.getElementById('back-to-home').addEventListener('click', showHomeScreen);
+
+    // --- DYNAMIC CONTENT ---
+    function getSectionContent(sectionId) {
+        const commonInputStyle = "w-full bg-black/20 border border-border-color rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent-blue-start text-right";
+        const commonSelectStyle = `w-full bg-black/20 border border-border-color rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent-blue-start text-right appearance-none bg-no-repeat bg-[center_left_1rem]`;
+        const commonButtonStyle = "action-btn btn-primary py-3";
+        const selectArrowIcon = `background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22 fill='%23a0a0a5'%3E%3Cpath fill-rule=%22evenodd%22 d=%22M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%22 clip-rule=%22evenodd%22/%3E%3C/svg%3E');`;
+        
+        const thirtyDaysFromNow = new Date();
+        thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+
+        switch(sectionId) {
+            case 'dashboard':
+                const expiringItems = batches.filter(item => {
+                    const expiryDate = parseJalaliDate(item.dateExpiry);
+                    return expiryDate && expiryDate <= thirtyDaysFromNow && expiryDate >= new Date();
+                }).sort((a,b) => parseJalaliDate(a.dateExpiry) - parseJalaliDate(b.dateExpiry));
+
+                const lowStockItems = batches.filter(item => item.qty <= 5)
+                                           .sort((a,b) => a.qty - b.qty);
+
+                let expiryHtml = expiringItems.length > 0 ? expiringItems.map(item => `
+                    <div class="glass-card p-3 text-right text-sm expiry-alert">
+                        <p class="font-bold">${item.title} - <span class="text-red-400">انقضا: ${item.dateExpiry}</span></p>
+                    </div>`).join('') : '<p class="text-sm text-text-secondary">موردی یافت نشد.</p>';
+
+                let lowStockHtml = lowStockItems.length > 0 ? lowStockItems.map(item => `
+                     <div class="glass-card p-3 text-right text-sm">
+                        <p class="font-bold">${item.title} - <span class="text-yellow-400">موجودی: ${item.qty}</span></p>
+                    </div>`).join('') : '<p class="text-sm text-text-secondary">موردی یافت نشد.</p>';
+
+                return `
+                    <div class="space-y-6">
+                        <div>
+                            <h2 class="text-xl font-bold text-right mb-3">🚨 هشدار انقضا (زیر ۳۰ روز)</h2>
+                            <div class="space-y-2">${expiryHtml}</div>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-right mb-3">🛒 پیشنهاد خرید (موجودی کمتر از ۵)</h2>
+                            <div class="space-y-2">${lowStockHtml}</div>
+                        </div>
+                    </div>`;
+
+            case 'inventory':
+                 if (batches.length === 0) return '<p class="text-center text-text-secondary mt-10">هنوز کالایی ثبت نشده است.</p>';
+                return `
+                    <div class="space-y-3">
+                        <h2 class="text-2xl font-bold text-right mb-4">لیست موجودی</h2>
+                        ${batches.sort((a, b) => (a.title > b.title) ? 1 : -1).map(item => {
+                            const expiryDate = parseJalaliDate(item.dateExpiry);
+                            const isExpired = expiryDate && expiryDate < new Date();
+                            const isExpiringSoon = expiryDate && expiryDate < thirtyDaysFromNow;
+                            let expiryClass = '';
+                            if(isExpired) expiryClass = 'text-gray-500 font-bold';
+                            else if(isExpiringSoon) expiryClass = 'text-red-400 font-bold';
+                            
+                            return `
+                            <div class="glass-card p-3 text-right ${ isExpired ? 'opacity-50 border-red-800' : ''}">
+                                <p class="font-bold">${item.title} <span class="text-sm text-text-secondary">${item.brand || ''}</span></p>
+                                <div class="text-xs text-text-secondary mt-2 grid grid-cols-2 gap-1">
+                                    <span><strong>دسته:</strong> ${item.category}</span>
+                                    <span><strong>تعداد:</strong> ${item.qty}</span>
+                                    ${item.weight ? `<span><strong>وزن:</strong> ${item.weight} ک.گ</span>` : ''}
+                                    ${item.volume ? `<span><strong>حجم:</strong> ${item.volume} ل</span>` : ''}
+                                    <span><strong>ورود:</strong> ${item.dateIn}</span>
+                                    ${item.dateExpiry ? `<span class="${expiryClass}"><strong>انقضا:</strong> ${item.dateExpiry}</span>` : ''}
+                                </div>
+                            </div>
+                        `}).join('')}
+                    </div>`;
+
+            case 'add':
+                return `
+                    <div class="glass-card p-4 space-y-4">
+                        <h2 class="text-2xl font-bold text-right">افزودن کالا</h2>
+                        <form id="addForm" class="space-y-4">
+                            <div><label class="block text-sm font-medium mb-1">عنوان کالا</label><input type="text" id="inTitle" class="${commonInputStyle}" required></div>
+                            <div><label class="block text-sm font-medium mb-1">برند / مدل</label><input type="text" id="inBrand" class="${commonInputStyle}"></div>
+                            <div><label class="block text-sm font-medium mb-1">دسته‌بندی ▾</label><select id="inCategory" class="${commonSelectStyle}" style="${selectArrowIcon}">${categories.map(c => `<option value="${c}">${c}</option>`).join('')}<option value="add_new">افزودن به دسته‌بندی...</option></select></div>
+                            <div><label class="block text-sm font-medium mb-1">تعداد</label><div class="form-input-group"><input type="number" id="inQty" min="1" class="${commonInputStyle}" required><span class="form-input-unit">عدد</span></div></div>
+                            <div><label class="block text-sm font-medium mb-1">وزن</label><div class="form-input-group"><input type="number" step="0.01" id="inWeight" class="${commonInputStyle}"><span class="form-input-unit">کیلوگرم</span></div></div>
+                            <div><label class="block text-sm font-medium mb-1">حجم</label><div class="form-input-group"><input type="number" step="0.01" id="inVolume" class="${commonInputStyle}"><span class="form-input-unit">لیتر</span></div></div>
+                            <div><label class="block text-sm font-medium mb-1">تاریخ ورود</label><input type="text" id="inDate" class="${commonInputStyle}" readonly required></div>
+                            <div><label class="block text-sm font-medium mb-1">تاریخ انقضا (اختیاری)</label><input type="text" id="inExpiry" class="${commonInputStyle}" readonly></div>
+                            <div><label class="block text-sm font-medium mb-1">توضیحات (اختیاری)</label><textarea id="inNote" rows="2" class="${commonInputStyle}"></textarea></div>
+                            <div><button type="submit" class="${commonButtonStyle} w-full mt-2">ثبت کالا</button></div>
+                        </form>
+                    </div>`;
+            
+            case 'report':
+                 if (batches.length === 0) return '<p class="text-center text-text-secondary mt-10">کالایی در انبار موجود نیست.</p>';
+                return `
+                    <div class="glass-card p-4 text-center">
+                        <h2 class="text-2xl font-bold mb-4">این بخش در حال توسعه است</h2>
+                    </div>`;
+            
+            case 'scan':
+            case 'import-excel':
+            case 'backup':
+                 return `<div class="glass-card p-4 text-center"><h2 class="text-2xl font-bold">این بخش در حال توسعه است</h2></div>`;
+        }
+    }
+
+    // --- EVENT LISTENERS & HANDLERS ---
+    function attachEventListeners(sectionId) {
+        setTimeout(() => {
+            if (typeof dCalendar === 'undefined') { console.error("dCalendar library not loaded."); return; }
+            if (sectionId === 'add') {
+                dCalendar.picker({ target: '#inDate', lang: 'fa' });
+                dCalendar.picker({ target: '#inExpiry', lang: 'fa' });
+            }
+        }, 50);
+
+        if (sectionId === 'add') {
+            document.getElementById('addForm').addEventListener('submit', handleAddItem);
+             const categorySelect = document.getElementById('inCategory');
+            categorySelect.addEventListener('change', () => {
+                 if (categorySelect.value === 'add_new') {
+                    const newCategory = prompt('نام دسته‌بندی جدید را وارد کنید:');
+                    if (newCategory && newCategory.trim() !== '' && !categories.includes(newCategory)) {
+                        categories.push(newCategory.trim()); save();
+                        const newOption = new Option(newCategory.trim(), newCategory.trim(), true, true);
+                        categorySelect.add(newOption, categorySelect.options[categorySelect.options.length - 1]);
+                    } else { categorySelect.selectedIndex = 0; }
+                }
+            });
+        }
+    }
+
+    function handleAddItem(e) {
+        e.preventDefault();
+        const newItem = {
+            id: 'id_' + Date.now(),
+            title: document.getElementById('inTitle').value.trim(), brand: document.getElementById('inBrand').value.trim(),
+            category: document.getElementById('inCategory').value, qty: parseFloat(document.getElementById('inQty').value) || 0,
+            weight: parseFloat(document.getElementById('inWeight').value) || null, volume: parseFloat(document.getElementById('inVolume').value) || null,
+            dateIn: document.getElementById('inDate').value, dateExpiry: document.getElementById('inExpiry').value || null,
+            note: document.getElementById('inNote').value.trim()
+        };
+        batches.unshift(newItem); save();
+        alert('کالا با موفقیت ثبت شد!');
+        showHomeScreen();
+    }
+    
+    // --- INITIALIZATION ---
+    function updateHeader() { document.getElementById('header-date').textContent = getJalaliDate(); }
+    load();
+    showHomeScreen();
+    
+});
+</script>
+
+</body>
+</html>
