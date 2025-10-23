@@ -1,4 +1,5 @@
-const CACHE_NAME = 'warehouse-cache-v7'; // New version
+// --- نسخه جدید کش ---
+const CACHE_NAME = 'warehouse-cache-v8.0'; 
 const LOCAL_FILES = [
   './',
   './index.html',
