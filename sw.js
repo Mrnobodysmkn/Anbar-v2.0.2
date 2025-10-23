@@ -1,18 +1,20 @@
-// --- نسخه جدید کش ---
-const CACHE_NAME = 'warehouse-cache-v8.0'; 
+const CACHE_NAME = 'warehouse-cache-v9.0'; // --- نسخه جدید
 const LOCAL_FILES = [
   './',
   './index.html',
   './manifest.json'
 ];
 
-// URLs for external libraries to be cached
+// --- افزودن کتابخانه‌ها به کش ---
 const CDN_FILES = [
   'https://cdn.tailwindcss.com',
-  'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap',
+  'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap',
   'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
   'https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js',
-  'https://cdn.jsdelivr.net/npm/chart.js'
+  'https://cdn.jsdelivr.net/npm/chart.js',
+  // --- رفع باگ تقویم: افزودن فایل‌های تقویم به کش ---
+  'https://cdn.jsdelivr.net/npm/d-calendar@latest/dist/d-calendar.picker.css',
+  'https://cdn.jsdelivr.net/npm/d-calendar@latest/dist/d-calendar.picker.js'
 ];
 
 self.addEventListener('install', (event) => {
@@ -20,7 +22,6 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('Opened cache');
-        // Cache local files and core CDN files
         return Promise.all([
           cache.addAll(LOCAL_FILES),
           cache.addAll(CDN_FILES).catch(err => console.log('CDN caching failed, will cache on fetch.', err))
@@ -31,7 +32,6 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  // Clean up old caches
   event.waitUntil(
     caches.keys().then((keyList) => {
       return Promise.all(keyList.map((key) => {
@@ -51,12 +51,9 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
       .then((cachedResponse) => {
-        // Cache hit - return response
         if (cachedResponse) {
           return cachedResponse;
         }
-
-        // Not in cache - fetch from network, cache it, and return
         return fetch(event.request).then(
           (networkResponse) => {
             if (!networkResponse || networkResponse.status !== 200 || (networkResponse.type !== 'basic' && networkResponse.type !== 'cors')) {
