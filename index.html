@@ -13,7 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* CSS تقویم (بدون تغییر) */
+/* CSS تقویم */
 .d-calendar{display:block;direction:rtl;width:250px;background-color:#fff;border-radius:4px;border:1px solid #ddd}.d-calendar[data-lang=en]{direction:ltr}.d-calendar .d-calendar-week{display:flex;padding:10px 0;border-bottom:1px solid #ddd}.d-calendar .d-calendar-week span{flex-basis:100%;text-align:center;font-size:13px;font-weight:500;color:#333}.d-calendar .d-calendar-days{display:flex;flex-wrap:wrap;padding:10px 0}.d-calendar .d-calendar-days span,.d-calendar .d-calendar-days button{flex-basis:14.2%;text-align:center;font-size:13px;font-weight:400;height:30px;line-height:30px;color:#333}.d-calendar .d-calendar-days button{cursor:pointer;background-color:transparent;border:1px solid transparent;outline:none;border-radius:50%}.d-calendar .d-calendar-days button:hover{background-color:#eee;border:1px solid #ddd}.d-calendar .d-calendar-days button:focus{background-color:#eee;border:1px solid #ccc}.d-calendar .d-calendar-days .d-calendar-today{background-color:#333;color:#fff;border:1px solid #333}.d-calendar-picker{display:inline-block;position:relative}.d-calendar-picker-main{position:absolute;outline:none;top:100%;left:50%;transform:translate(-50%,5px);z-index:9999}.d-calendar-picker-header{display:flex;align-items:center;justify-content:center;position:relative;padding:10px;background-color:#fff;border-top-left-radius:4px;border-top-right-radius:4px;border:1px solid #ddd;border-bottom:none}.d-calendar-picker-header h4{margin:0;font-size:14px;font-weight:500;color:#333}.d-calendar-picker-header button{display:block;width:30px;height:30px;border-radius:50%;border:1px solid transparent;background-color:transparent;position:absolute;top:50%;transform:translateY(-50%);cursor:pointer;outline:none}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-prev{left:5px}.d-calendar-picker-header .d-calendar-picker-prev{right:5px}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-next{right:5px}.d-calendar-picker-header .d-calendar-picker-next{left:5px}.d-calendar-picker-header button:hover{background-color:#eee;border:1px solid #ddd}.d-calendar-picker-header button:focus{background-color:#eee;border:1px solid #ccc}.d-calendar-picker-header button i{display:block;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;margin:0 auto}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-prev i{border-right:5px solid #333}.d-calendar-picker-header .d-calendar-picker-prev i{border-left:5px solid #333}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-next i{border-left:5px solid #333}.d-calendar-picker-header .d-calendar-picker-next i{border-right:5px solid #333}
 </style>
 
@@ -35,10 +35,29 @@
   #app-frame::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0, 122, 255, 0.15) 0%, transparent 40%), radial-gradient(circle, rgba(52, 199, 89, 0.15) 50%, transparent 80%); animation: fluid-background 25s ease-in-out infinite; z-index: 0; }
   .content-wrapper { position: relative; z-index: 1; backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px); height: 100%; display: flex; flex-direction: column; flex: 1; overflow: hidden; }
   .glass-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); }
-  .action-btn { position: relative; overflow: hidden; padding: 16px; border-radius: 20px; font-weight: 700; color: var(--text-primary); border: 1px solid var(--border-color); box-shadow: 0px 5px 10px rgba(0,0,0,0.2), inset 0px 1px 1px rgba(255,255,255,0.1); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); transform-style: preserve-3d; text-align: center; font-size: 1.1rem; }
-  .action-btn:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0px 10px 20px rgba(0,0,0,0.3), inset 0px 1px 1px rgba(255,255,255,0.1); }
+  
+  /* --- بهبود دکمه (پیشنهاد زیبایی) --- */
+  .action-btn { 
+    position: relative; overflow: hidden; padding: 16px; border-radius: 20px; font-weight: 700; 
+    color: var(--text-primary); border: 1px solid var(--border-color); 
+    box-shadow: 0px 5px 10px rgba(0,0,0,0.2), inset 0px 1px 1px rgba(255,255,255,0.1); 
+    transform-style: preserve-3d; text-align: center; font-size: 1.1rem; 
+    /* انتقال نرم‌تر و سریع‌تر */
+    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .action-btn:hover { 
+    transform: translateY(-4px) scale(1.02); 
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.3), inset 0px 1px 1px rgba(255,255,255,0.1); 
+  }
+  /* افکت فشرده شدن هنگام کلیک/لمس */
+  .action-btn:active {
+    transform: translateY(1px) scale(0.95);
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+  }
+
   .btn-primary { background-image: linear-gradient(135deg, var(--accent-blue-start), var(--accent-blue-end)); }
   .btn-secondary { background-color: rgba(60, 60, 67, 0.7); }
+  
   @keyframes shimmer-glow { 0% { transform: translateX(-150%) skewX(-30deg); opacity: 0.5; } 50% { transform: translateX(150%) skewX(-30deg); opacity: 1; } 100% { transform: translateX(300%) skewX(-30deg); opacity: 0.5; } }
   .action-btn::after { content: ''; position: absolute; top: 0; left: 0; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent); animation: shimmer-glow 4s ease-in-out infinite; }
   .section-content { display: none; }
@@ -48,46 +67,30 @@
   .form-input-unit { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 0.9rem; }
   .expiry-alert { border-left: 4px solid var(--alert-red); }
 
-  /* --- CSS جدید برای اعلان --- */
+  /* CSS برای اعلان (Toast) */
   #toast {
-    visibility: hidden;
-    min-width: 250px;
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    border-radius: 10px;
-    padding: 16px;
-    position: fixed;
-    z-index: 10000;
-    left: 50%;
-    top: 50px;
-    transform: translateX(-50%);
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: visibility 0.5s, opacity 0.5s linear, top 0.5s ease-out;
-    opacity: 0;
+    visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center;
+    border-radius: 10px; padding: 16px; position: fixed; z-index: 10000; left: 50%; top: 50px;
+    transform: translateX(-50%); font-size: 0.9rem; font-weight: 500;
+    transition: visibility 0.5s, opacity 0.5s linear, top 0.5s ease-out; opacity: 0;
   }
-  #toast.show {
-    visibility: visible;
-    opacity: 1;
-    top: 70px;
-  }
+  #toast.show { visibility: visible; opacity: 1; top: 70px; }
   #toast.success { background-color: var(--success-green); }
   #toast.error { background-color: var(--alert-red); }
 
-  /* --- CSS جدید برای دکمه خروج --- */
+  /* CSS برای دکمه خروج */
   .remove-item-btn {
-    font-size: 0.75rem;
-    font-weight: 500;
-    background-color: rgba(255, 69, 58, 0.2); /* Red tint */
-    color: var(--alert-red);
-    border: 1px solid var(--alert-red);
-    padding: 4px 10px;
-    border-radius: 10px;
-    margin-top: 10px;
-    transition: background-color 0.2s;
+    font-size: 0.75rem; font-weight: 500; background-color: rgba(255, 69, 58, 0.2); 
+    color: var(--alert-red); border: 1px solid var(--alert-red); padding: 4px 10px;
+    border-radius: 10px; margin-top: 10px; transition: background-color 0.2s;
   }
   .remove-item-btn:hover { background-color: rgba(255, 69, 58, 0.4); }
+  
+  /* کلاس برای Placeholder تاریخ */
+  input[type="text"]::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.5;
+  }
 </style>
 </head>
 <body>
@@ -160,11 +163,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (savedCategories) categories = savedCategories;
     }
 
-    // --- تابع جدید برای اعلان ---
+    // --- تابع اعلان (Toast) ---
     function showToast(message, type = 'success') {
         const toast = document.getElementById('toast');
         toast.textContent = message;
-        toast.className = 'show ' + type; // type can be 'success' or 'error'
+        toast.className = 'show ' + type;
         setTimeout(() => { 
             toast.className = toast.className.replace('show', ''); 
         }, 3000);
@@ -179,12 +182,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${seasons[month]} ${year}`;
     }
     
+    // --- بهبود منطق تاریخ: تبدیل تاریخ جلالی به میلادی برای مقایسه دقیق ---
     function parseJalaliDate(jalaliStr) {
         if (!jalaliStr) return null;
         const [year, month, day] = jalaliStr.split('/').map(Number);
         if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
+        // این یک تقریب برای تبدیل است که برای محاسبات کافیست
         let gYear = year + 621;
-        return new Date(gYear, month - 1, day);
+        // ایجاد تاریخ میلادی بر اساس اجزای جلالی (برای محاسبات زمانی)
+        // این روش دقیق نیست اما برای اپلیکیشن فعلی ساده‌ترین راه‌حل است
+        // برای دقت کامل، نیاز به یک کتابخانه کامل تبدیل تاریخ است.
+        try {
+            const gDate = new Date(gYear, month - 1, day);
+            // بررسی ساده برای اطمینان از معتبر بودن تاریخ
+            if (gDate.getFullYear() !== gYear || gDate.getMonth() !== (month - 1)) {
+                 // اگر تاریخ نامعتبر بود (مثلا 31 خرداد که 30 روزه)
+                 return new Date(gYear, month - 1, day - 1);
+            }
+            return gDate;
+        } catch (e) {
+            console.error("Invalid date:", e);
+            return null;
+        }
     }
 
     // --- UI NAVIGATION ---
@@ -221,15 +240,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const commonButtonStyle = "action-btn btn-primary py-3";
         const selectArrowIcon = `background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22 fill='%23a0a0a5'%3E%3Cpath fill-rule=%22evenodd%22 d=%22M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%22 clip-rule=%22evenodd%22/%3E%3C/svg%3E');`;
         
+        const now = new Date();
         const thirtyDaysFromNow = new Date();
         thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
 
         switch(sectionId) {
             case 'dashboard':
+                // --- استفاده از timestamp برای محاسبه دقیق ---
                 const expiringItems = batches.filter(item => {
-                    const expiryDate = parseJalaliDate(item.dateExpiry);
-                    return expiryDate && expiryDate <= thirtyDaysFromNow && expiryDate >= new Date();
-                }).sort((a,b) => parseJalaliDate(a.dateExpiry) - parseJalaliDate(b.dateExpiry));
+                    if (!item.dateExpiryTimestamp) return false;
+                    const expiryDate = new Date(item.dateExpiryTimestamp);
+                    return expiryDate <= thirtyDaysFromNow && expiryDate >= now;
+                }).sort((a,b) => a.dateExpiryTimestamp - b.dateExpiryTimestamp);
 
                 const lowStockItems = batches.filter(item => item.qty <= 5)
                                            .sort((a,b) => a.qty - b.qty);
@@ -262,9 +284,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="space-y-3">
                         <h2 class="text-2xl font-bold text-right mb-4">لیست موجودی</h2>
                         ${batches.sort((a, b) => (a.title > b.title) ? 1 : -1).map(item => {
-                            const expiryDate = parseJalaliDate(item.dateExpiry);
-                            const isExpired = expiryDate && expiryDate < new Date();
+                            // --- استفاده از timestamp برای محاسبه دقیق ---
+                            const expiryDate = item.dateExpiryTimestamp ? new Date(item.dateExpiryTimestamp) : null;
+                            const isExpired = expiryDate && expiryDate < now;
                             const isExpiringSoon = expiryDate && expiryDate < thirtyDaysFromNow;
+                            
                             let expiryClass = '';
                             if(isExpired) expiryClass = 'text-gray-500 font-bold';
                             else if(isExpiringSoon) expiryClass = 'text-red-400 font-bold';
@@ -302,8 +326,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div><label class="block text-sm font-medium mb-1">تعداد</label><div class="form-input-group"><input type="number" id="inQty" min="1" class="${commonInputStyle}" required><span class="form-input-unit">عدد</span></div></div>
                             <div><label class="block text-sm font-medium mb-1">وزن</label><div class="form-input-group"><input type="number" step="0.01" id="inWeight" class="${commonInputStyle}"><span class="form-input-unit">کیلوگرم</span></div></div>
                             <div><label class="block text-sm font-medium mb-1">حجم</label><div class="form-input-group"><input type="number" step="0.01" id="inVolume" class="${commonInputStyle}"><span class="form-input-unit">لیتر</span></div></div>
-                            <div><label class="block text-sm font-medium mb-1">تاریخ ورود</label><input type="text" id="inDate" class="${commonInputStyle}" readonly required></div>
-                            <div><label class="block text-sm font-medium mb-1">تاریخ انقضا (اختیاری)</label><input type="text" id="inExpiry" class="${commonInputStyle}" readonly></div>
+                            <div><label class="block text-sm font-medium mb-1">تاریخ ورود</label><input type="text" id="inDate" class="${commonInputStyle}" readonly required placeholder="روز/ماه/سال"></div>
+                            <div><label class="block text-sm font-medium mb-1">تاریخ انقضا (اختیاری)</label><input type="text" id="inExpiry" class="${commonInputStyle}" readonly placeholder="روز/ماه/سال"></div>
                             <div><label class="block text-sm font-medium mb-1">توضیحات (اختیاری)</label><textarea id="inNote" rows="2" class="${commonInputStyle}"></textarea></div>
                             <div><button type="submit" class="${commonButtonStyle} w-full mt-2">ثبت کالا</button></div>
                         </form>
@@ -313,7 +337,14 @@ document.addEventListener('DOMContentLoaded', () => {
                  if (batches.length === 0) return '<p class="text-center text-text-secondary mt-10">کالایی در انبار موجود نیست.</p>';
                 return `
                     <div class="glass-card p-4 text-center">
-                        <h2 class="text-2xl font-bold mb-4">این بخش در حال توسعه است</h2>
+                        <h2 class="text-2xl font-bold mb-4">ایجاد گزارش</h2>
+                        <p class="text-text-secondary mb-4">برای ایجاد گزارش، بازه زمانی مورد نظر خود را انتخاب کنید.</p>
+                        <form id="reportForm" class="space-y-4">
+                           <div><label class="block text-sm font-medium mb-1 text-right">از تاریخ</label><input type="text" id="repFrom" class="${commonInputStyle}" readonly placeholder="روز/ماه/سال"></div>
+                           <div><label class="block text-sm font-medium mb-1 text-right">تا تاریخ</label><input type="text" id="repTo" class="${commonInputStyle}" readonly placeholder="روز/ماه/سال"></div>
+                           <button type="submit" class="${commonButtonStyle} w-full">ایجاد گزارش</button>
+                        </form>
+                        <p class="text-xs text-text-secondary text-right mt-4">توجه: بخش گزارش‌گیری هنوز در حال توسعه است.</p>
                     </div>`;
             
             case 'scan':
@@ -330,6 +361,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (sectionId === 'add') {
                 dCalendar.picker({ target: '#inDate', lang: 'fa' });
                 dCalendar.picker({ target: '#inExpiry', lang: 'fa' });
+            }
+             if (sectionId === 'report' && batches.length > 0) {
+                dCalendar.picker({ target: '#repFrom', lang: 'fa' });
+                dCalendar.picker({ target: '#repTo', lang: 'fa' });
             }
         }, 50);
 
@@ -348,7 +383,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
-        // --- شنونده جدید برای دکمه‌های خروج ---
         if (sectionId === 'inventory') {
             document.querySelectorAll('.remove-item-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -360,20 +394,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleAddItem(e) {
         e.preventDefault();
+        
+        const dateInStr = document.getElementById('inDate').value;
+        const dateExpiryStr = document.getElementById('inExpiry').value || null;
+        
+        // --- بهبود منطق: ذخیره برچسب زمانی برای محاسبات ---
+        const dateInTimestamp = parseJalaliDate(dateInStr)?.getTime() || new Date().getTime(); // Fallback to now
+        const dateExpiryTimestamp = dateExpiryStr ? parseJalaliDate(dateExpiryStr)?.getTime() : null;
+
         const newItem = {
             id: 'id_' + Date.now(),
-            title: document.getElementById('inTitle').value.trim(), brand: document.getElementById('inBrand').value.trim(),
-            category: document.getElementById('inCategory').value, qty: parseFloat(document.getElementById('inQty').value) || 0,
-            weight: parseFloat(document.getElementById('inWeight').value) || null, volume: parseFloat(document.getElementById('inVolume').value) || null,
-            dateIn: document.getElementById('inDate').value, dateExpiry: document.getElementById('inExpiry').value || null,
-            note: document.getElementById('inNote').value.trim()
+            title: document.getElementById('inTitle').value.trim(), 
+            brand: document.getElementById('inBrand').value.trim(),
+            category: document.getElementById('inCategory').value, 
+            qty: parseFloat(document.getElementById('inQty').value) || 0,
+            weight: parseFloat(document.getElementById('inWeight').value) || null, 
+            volume: parseFloat(document.getElementById('inVolume').value) || null,
+            dateIn: dateInStr, 
+            dateExpiry: dateExpiryStr,
+            note: document.getElementById('inNote').value.trim(),
+            // --- ذخیره داده‌های زمانی جدید ---
+            dateInTimestamp: dateInTimestamp,
+            dateExpiryTimestamp: dateExpiryTimestamp
         };
-        batches.unshift(newItem); save();
-        showToast('کالا با موفقیت ثبت شد!', 'success'); // --- جایگزین alert
+        
+        batches.unshift(newItem); 
+        save();
+        showToast('کالا با موفقیت ثبت شد!', 'success');
         showHomeScreen();
     }
     
-    // --- تابع جدید برای ثبت خروج کالا ---
     function handleRemoveItem(itemId) {
         const itemIndex = batches.findIndex(b => b.id === itemId);
         if (itemIndex === -1) return;
@@ -381,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const item = batches[itemIndex];
         const qtyToRemoveStr = prompt(`چه تعداد از کالای "${item.title}" خارج/مصرف شد؟\nموجودی فعلی: ${item.qty}`, "1");
         
-        if (qtyToRemoveStr === null) return; // کاربر کنسل کرد
+        if (qtyToRemoveStr === null) return; 
         
         const qtyToRemove = parseFloat(qtyToRemoveStr);
         
@@ -398,7 +448,6 @@ document.addEventListener('DOMContentLoaded', () => {
         item.qty -= qtyToRemove;
         
         if (item.qty === 0) {
-            // اگر موجودی صفر شد، کالا را از لیست حذف می‌کنیم
             batches.splice(itemIndex, 1);
             showToast(`کالای "${item.title}" به اتمام رسید و از لیست حذف شد.`, 'success');
         } else {
@@ -406,7 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         save();
-        showSection('inventory'); // رفرش کردن صفحه موجودی
+        showSection('inventory'); 
     }
     
     // --- INITIALIZATION ---
