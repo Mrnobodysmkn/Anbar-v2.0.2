@@ -13,6 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
 
 <style>
+/* CSS تقویم (بدون تغییر) */
 .d-calendar{display:block;direction:rtl;width:250px;background-color:#fff;border-radius:4px;border:1px solid #ddd}.d-calendar[data-lang=en]{direction:ltr}.d-calendar .d-calendar-week{display:flex;padding:10px 0;border-bottom:1px solid #ddd}.d-calendar .d-calendar-week span{flex-basis:100%;text-align:center;font-size:13px;font-weight:500;color:#333}.d-calendar .d-calendar-days{display:flex;flex-wrap:wrap;padding:10px 0}.d-calendar .d-calendar-days span,.d-calendar .d-calendar-days button{flex-basis:14.2%;text-align:center;font-size:13px;font-weight:400;height:30px;line-height:30px;color:#333}.d-calendar .d-calendar-days button{cursor:pointer;background-color:transparent;border:1px solid transparent;outline:none;border-radius:50%}.d-calendar .d-calendar-days button:hover{background-color:#eee;border:1px solid #ddd}.d-calendar .d-calendar-days button:focus{background-color:#eee;border:1px solid #ccc}.d-calendar .d-calendar-days .d-calendar-today{background-color:#333;color:#fff;border:1px solid #333}.d-calendar-picker{display:inline-block;position:relative}.d-calendar-picker-main{position:absolute;outline:none;top:100%;left:50%;transform:translate(-50%,5px);z-index:9999}.d-calendar-picker-header{display:flex;align-items:center;justify-content:center;position:relative;padding:10px;background-color:#fff;border-top-left-radius:4px;border-top-right-radius:4px;border:1px solid #ddd;border-bottom:none}.d-calendar-picker-header h4{margin:0;font-size:14px;font-weight:500;color:#333}.d-calendar-picker-header button{display:block;width:30px;height:30px;border-radius:50%;border:1px solid transparent;background-color:transparent;position:absolute;top:50%;transform:translateY(-50%);cursor:pointer;outline:none}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-prev{left:5px}.d-calendar-picker-header .d-calendar-picker-prev{right:5px}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-next{right:5px}.d-calendar-picker-header .d-calendar-picker-next{left:5px}.d-calendar-picker-header button:hover{background-color:#eee;border:1px solid #ddd}.d-calendar-picker-header button:focus{background-color:#eee;border:1px solid #ccc}.d-calendar-picker-header button i{display:block;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;margin:0 auto}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-prev i{border-right:5px solid #333}.d-calendar-picker-header .d-calendar-picker-prev i{border-left:5px solid #333}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-next i{border-left:5px solid #333}.d-calendar-picker-header .d-calendar-picker-next i{border-right:5px solid #333}
 </style>
 
@@ -22,7 +23,7 @@
   :root {
     --bg-color: #000000; --app-bg: #111111; --card-bg: rgba(38, 38, 40, 0.6);
     --border-color: rgba(80, 80, 80, 0.4); --text-primary: #ffffff; --text-secondary: #a0a0a5;
-    --accent-blue-start: #007aff; --accent-blue-end: #0a84ff; --alert-red: #ff453a;
+    --accent-blue-start: #007aff; --accent-blue-end: #0a84ff; --alert-red: #ff453a; --success-green: #34c759;
   }
   @keyframes fluid-background {
     0% { transform: translate(-10%, -10%) rotate(0deg); } 25% { transform: translate(10%, -10%) rotate(10deg); }
@@ -46,9 +47,52 @@
   .form-input-group { position: relative; }
   .form-input-unit { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 0.9rem; }
   .expiry-alert { border-left: 4px solid var(--alert-red); }
+
+  /* --- CSS جدید برای اعلان --- */
+  #toast {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;
+    padding: 16px;
+    position: fixed;
+    z-index: 10000;
+    left: 50%;
+    top: 50px;
+    transform: translateX(-50%);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: visibility 0.5s, opacity 0.5s linear, top 0.5s ease-out;
+    opacity: 0;
+  }
+  #toast.show {
+    visibility: visible;
+    opacity: 1;
+    top: 70px;
+  }
+  #toast.success { background-color: var(--success-green); }
+  #toast.error { background-color: var(--alert-red); }
+
+  /* --- CSS جدید برای دکمه خروج --- */
+  .remove-item-btn {
+    font-size: 0.75rem;
+    font-weight: 500;
+    background-color: rgba(255, 69, 58, 0.2); /* Red tint */
+    color: var(--alert-red);
+    border: 1px solid var(--alert-red);
+    padding: 4px 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+  }
+  .remove-item-btn:hover { background-color: rgba(255, 69, 58, 0.4); }
 </style>
 </head>
 <body>
+
+<div id="toast"></div>
 
 <div id="app-frame">
   <div class="content-wrapper">
@@ -114,6 +158,16 @@ document.addEventListener('DOMContentLoaded', () => {
         batches = JSON.parse(localStorage.getItem(KEY_BATCHES) || '[]');
         const savedCategories = JSON.parse(localStorage.getItem(KEY_CATEGORIES) || 'null');
         if (savedCategories) categories = savedCategories;
+    }
+
+    // --- تابع جدید برای اعلان ---
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'show ' + type; // type can be 'success' or 'error'
+        setTimeout(() => { 
+            toast.className = toast.className.replace('show', ''); 
+        }, 3000);
     }
 
     // --- UTILITIES ---
@@ -217,14 +271,21 @@ document.addEventListener('DOMContentLoaded', () => {
                             
                             return `
                             <div class="glass-card p-3 text-right ${ isExpired ? 'opacity-50 border-red-800' : ''}">
-                                <p class="font-bold">${item.title} <span class="text-sm text-text-secondary">${item.brand || ''}</span></p>
-                                <div class="text-xs text-text-secondary mt-2 grid grid-cols-2 gap-1">
-                                    <span><strong>دسته:</strong> ${item.category}</span>
-                                    <span><strong>تعداد:</strong> ${item.qty}</span>
-                                    ${item.weight ? `<span><strong>وزن:</strong> ${item.weight} ک.گ</span>` : ''}
-                                    ${item.volume ? `<span><strong>حجم:</strong> ${item.volume} ل</span>` : ''}
-                                    <span><strong>ورود:</strong> ${item.dateIn}</span>
-                                    ${item.dateExpiry ? `<span class="${expiryClass}"><strong>انقضا:</strong> ${item.dateExpiry}</span>` : ''}
+                                <div class="flex justify-between items-start">
+                                  <div>
+                                    <p class="font-bold">${item.title} <span class="text-sm text-text-secondary">${item.brand || ''}</span></p>
+                                    <div class="text-xs text-text-secondary mt-2 grid grid-cols-2 gap-1">
+                                        <span><strong>دسته:</strong> ${item.category}</span>
+                                        <span><strong>تعداد:</strong> ${item.qty}</span>
+                                        ${item.weight ? `<span><strong>وزن:</strong> ${item.weight} ک.گ</span>` : ''}
+                                        ${item.volume ? `<span><strong>حجم:</strong> ${item.volume} ل</span>` : ''}
+                                        <span><strong>ورود:</strong> ${item.dateIn}</span>
+                                        ${item.dateExpiry ? `<span class="${expiryClass}"><strong>انقضا:</strong> ${item.dateExpiry}</span>` : ''}
+                                    </div>
+                                  </div>
+                                  <div>
+                                      <button data-id="${item.id}" class="remove-item-btn">ثبت خروج</button>
+                                  </div>
                                 </div>
                             </div>
                         `}).join('')}
@@ -286,6 +347,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
+        
+        // --- شنونده جدید برای دکمه‌های خروج ---
+        if (sectionId === 'inventory') {
+            document.querySelectorAll('.remove-item-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    handleRemoveItem(e.currentTarget.dataset.id);
+                });
+            });
+        }
     }
 
     function handleAddItem(e) {
@@ -299,8 +369,44 @@ document.addEventListener('DOMContentLoaded', () => {
             note: document.getElementById('inNote').value.trim()
         };
         batches.unshift(newItem); save();
-        alert('کالا با موفقیت ثبت شد!');
+        showToast('کالا با موفقیت ثبت شد!', 'success'); // --- جایگزین alert
         showHomeScreen();
+    }
+    
+    // --- تابع جدید برای ثبت خروج کالا ---
+    function handleRemoveItem(itemId) {
+        const itemIndex = batches.findIndex(b => b.id === itemId);
+        if (itemIndex === -1) return;
+        
+        const item = batches[itemIndex];
+        const qtyToRemoveStr = prompt(`چه تعداد از کالای "${item.title}" خارج/مصرف شد؟\nموجودی فعلی: ${item.qty}`, "1");
+        
+        if (qtyToRemoveStr === null) return; // کاربر کنسل کرد
+        
+        const qtyToRemove = parseFloat(qtyToRemoveStr);
+        
+        if (isNaN(qtyToRemove) || qtyToRemove <= 0) {
+            showToast('لطفا یک عدد معتبر وارد کنید', 'error');
+            return;
+        }
+        
+        if (qtyToRemove > item.qty) {
+            showToast('تعداد درخواستی از موجودی بیشتر است', 'error');
+            return;
+        }
+        
+        item.qty -= qtyToRemove;
+        
+        if (item.qty === 0) {
+            // اگر موجودی صفر شد، کالا را از لیست حذف می‌کنیم
+            batches.splice(itemIndex, 1);
+            showToast(`کالای "${item.title}" به اتمام رسید و از لیست حذف شد.`, 'success');
+        } else {
+            showToast(`موجودی کالای "${item.title}" به‌روز شد.\nموجودی جدید: ${item.qty}`, 'success');
+        }
+        
+        save();
+        showSection('inventory'); // رفرش کردن صفحه موجودی
     }
     
     // --- INITIALIZATION ---
@@ -309,6 +415,16 @@ document.addEventListener('DOMContentLoaded', () => {
     showHomeScreen();
     
 });
+</script>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(registration => console.log('SW registered: ', registration))
+                .catch(registrationError => console.log('SW registration failed: ', registrationError));
+        });
+    }
 </script>
 
 </body>
