@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>مدیریت انبار - نسخه نهایی</title>
+<title>مدیریت انبار - v8.0</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -34,22 +34,31 @@
   #app-frame { background-color: var(--app-bg); border-radius: 40px; height: calc(100dvh - 24px); position: relative; overflow: hidden; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
   #app-frame::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0, 122, 255, 0.15) 0%, transparent 40%), radial-gradient(circle, rgba(52, 199, 89, 0.15) 50%, transparent 80%); animation: fluid-background 25s ease-in-out infinite; z-index: 0; }
   .content-wrapper { position: relative; z-index: 1; backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px); height: 100%; display: flex; flex-direction: column; flex: 1; overflow: hidden; }
-  .glass-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); }
   
-  /* --- بهبود دکمه (پیشنهاد زیبایی) --- */
+  /* --- شبیه‌سازی "Liquid Glass" --- */
+  .glass-card { 
+    background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; 
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    /* انتقال نرم برای افکت لمس */
+    transition: transform 0.15s cubic-bezier(0.2, 0.0, 0.38, 0.9), box-shadow 0.15s cubic-bezier(0.2, 0.0, 0.38, 0.9);
+  }
+  /* افکت "فرو رفتگی" هنگام لمس */
+  .glass-card:active {
+    transform: scale(0.97);
+    box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.1);
+  }
+
   .action-btn { 
     position: relative; overflow: hidden; padding: 16px; border-radius: 20px; font-weight: 700; 
     color: var(--text-primary); border: 1px solid var(--border-color); 
     box-shadow: 0px 5px 10px rgba(0,0,0,0.2), inset 0px 1px 1px rgba(255,255,255,0.1); 
     transform-style: preserve-3d; text-align: center; font-size: 1.1rem; 
-    /* انتقال نرم‌تر و سریع‌تر */
     transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
   .action-btn:hover { 
     transform: translateY(-4px) scale(1.02); 
     box-shadow: 0px 10px 20px rgba(0,0,0,0.3), inset 0px 1px 1px rgba(255,255,255,0.1); 
   }
-  /* افکت فشرده شدن هنگام کلیک/لمس */
   .action-btn:active {
     transform: translateY(1px) scale(0.95);
     box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
@@ -67,7 +76,6 @@
   .form-input-unit { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 0.9rem; }
   .expiry-alert { border-left: 4px solid var(--alert-red); }
 
-  /* CSS برای اعلان (Toast) */
   #toast {
     visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center;
     border-radius: 10px; padding: 16px; position: fixed; z-index: 10000; left: 50%; top: 50px;
@@ -78,7 +86,6 @@
   #toast.success { background-color: var(--success-green); }
   #toast.error { background-color: var(--alert-red); }
 
-  /* CSS برای دکمه خروج */
   .remove-item-btn {
     font-size: 0.75rem; font-weight: 500; background-color: rgba(255, 69, 58, 0.2); 
     color: var(--alert-red); border: 1px solid var(--alert-red); padding: 4px 10px;
@@ -86,10 +93,36 @@
   }
   .remove-item-btn:hover { background-color: rgba(255, 69, 58, 0.4); }
   
-  /* کلاس برای Placeholder تاریخ */
-  input[type="text"]::placeholder {
+  input[type="text"]::placeholder { color: var(--text-secondary); opacity: 0.5; }
+  
+  /* --- استایل آیکون‌های SVG --- */
+  .icon-style {
+    width: 1.5rem; /* 24px */
+    height: 1.5rem; /* 24px */
+    stroke-width: 2;
+  }
+  
+  /* --- استایل صفحه خالی (Empty State) --- */
+  .empty-state-container {
+    text-align: center;
+    margin-top: 2rem; /* 32px */
+    opacity: 0.6;
+    animation: fadeIn 1s ease-in-out;
+  }
+  .empty-state-container svg {
+    width: 6rem; /* 96px */
+    height: 6rem; /* 96px */
+    margin: 0 auto 1rem; /* 16px */
+    stroke: var(--text-secondary);
+  }
+  .empty-state-container p {
+    font-size: 1.1rem; /* 18px */
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .empty-state-container span {
+    font-size: 0.9rem; /* 14px */
     color: var(--text-secondary);
-    opacity: 0.5;
   }
 </style>
 </head>
@@ -104,7 +137,7 @@
             <div class="flex justify-between items-center">
                 <div class="text-left flex-1"><p id="header-date" class="text-xs text-text-secondary font-medium"></p></div>
                 <div class="text-center flex-1"><h1 class="text-2xl font-extrabold" style="background: -webkit-linear-gradient(45deg, #eee, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">مدیریت انبار</h1></div>
-                <div class="text-right flex-1"><p class="text-xs text-text-secondary font-medium">نسخه نهایی</p></div>
+                <div class="text-right flex-1"><p id="app-version" class="text-xs text-text-secondary font-medium"></p></div>
             </div>
         </div>
     </header>
@@ -112,11 +145,26 @@
     <main class="flex-1 overflow-y-auto px-6 pb-6">
         <div id="home-screen" class="section-content active">
              <div class="grid grid-cols-1 gap-4">
-                <button data-target="dashboard" class="action-btn btn-primary flex items-center justify-center gap-2"><span>🏠</span><span>داشبورد</span></button>
-                <button data-target="inventory" class="action-btn btn-secondary flex items-center justify-center gap-2"><span>📦</span><span>موجودی</span></button>
-                <button data-target="add" class="action-btn btn-secondary flex items-center justify-center gap-2"><span>افزودن کالا</span><span class="font-bold text-2xl">+</span></button>
-                <button data-target="scan" class="action-btn btn-secondary flex items-center justify-center gap-2"><span>📷</span><span>اسکن بارکد</span></button>
-                <button data-target="report" class="action-btn btn-secondary flex items-center justify-center gap-2"><span>📊</span><span>گزارش</span></button>
+                <button data-target="dashboard" class="action-btn btn-primary flex items-center justify-center gap-2">
+                    <svg class="icon-style" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>
+                    <span>داشبورد</span>
+                </button>
+                <button data-target="inventory" class="action-btn btn-secondary flex items-center justify-center gap-2">
+                    <svg class="icon-style" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10.5 11.25h3M12 15v.008" /><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 7.5h16.5v-1.5c0-.621-.504-1.125-1.125-1.125h-14.25C4.254 4.875 3.75 5.379 3.75 6v1.5z" /></svg>
+                    <span>موجودی</span>
+                </button>
+                <button data-target="add" class="action-btn btn-secondary flex items-center justify-center gap-2">
+                    <svg class="icon-style" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                    <span>افزودن کالا</span>
+                </button>
+                <button data-target="scan" class="action-btn btn-secondary flex items-center justify-center gap-2">
+                    <svg class="icon-style" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.5v15a2.25 2.25 0 002.25 2.25h13.5a2.25 2.25 0 002.25-2.25v-15a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25zM3.75 9h16.5M3.75 15h16.5M7.5 4.5v15m4.5-15v15m4.5-15v15" /></svg>
+                    <span>اسکن بارکد</span>
+                </button>
+                <button data-target="report" class="action-btn btn-secondary flex items-center justify-center gap-2">
+                    <svg class="icon-style" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 013 20.625v-7.5zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v12c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 019.75 20.625v-12zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v16.5c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 0116.5 20.625v-16.5z" /></svg>
+                    <span>گزارش</span>
+                </button>
                 <div class="grid grid-cols-2 gap-4">
                     <button data-target="import-excel" class="action-btn btn-secondary flex items-center justify-center gap-2 text-sm px-2 h-20"><span>📄</span><span>ورود کالا با اکسل</span></button>
                     <button data-target="backup" class="action-btn btn-secondary flex items-center justify-center gap-2 text-sm px-2 h-20"><span>💾</span><span>پشتیبان‌گیری</span></button>
@@ -146,6 +194,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // --- نسخه‌بندی جدید ---
+    const APP_VERSION = 'v8.0';
+    
     // --- DATA MANAGEMENT ---
     const KEY_BATCHES = 'wh_final_batches_v4';
     const KEY_CATEGORIES = 'wh_final_categories_v4';
@@ -182,28 +233,36 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${seasons[month]} ${year}`;
     }
     
-    // --- بهبود منطق تاریخ: تبدیل تاریخ جلالی به میلادی برای مقایسه دقیق ---
+    // --- بهبود منطق تاریخ ---
     function parseJalaliDate(jalaliStr) {
         if (!jalaliStr) return null;
         const [year, month, day] = jalaliStr.split('/').map(Number);
         if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
-        // این یک تقریب برای تبدیل است که برای محاسبات کافیست
-        let gYear = year + 621;
-        // ایجاد تاریخ میلادی بر اساس اجزای جلالی (برای محاسبات زمانی)
-        // این روش دقیق نیست اما برای اپلیکیشن فعلی ساده‌ترین راه‌حل است
-        // برای دقت کامل، نیاز به یک کتابخانه کامل تبدیل تاریخ است.
-        try {
-            const gDate = new Date(gYear, month - 1, day);
-            // بررسی ساده برای اطمینان از معتبر بودن تاریخ
-            if (gDate.getFullYear() !== gYear || gDate.getMonth() !== (month - 1)) {
-                 // اگر تاریخ نامعتبر بود (مثلا 31 خرداد که 30 روزه)
-                 return new Date(gYear, month - 1, day - 1);
-            }
-            return gDate;
-        } catch (e) {
-            console.error("Invalid date:", e);
-            return null;
+        
+        // کتابخانه dCalendar یک تابع تبدیل داخلی ندارد،
+        // بنابراین ما باید یک تبدیل تقریبی میلادی برای محاسبات انجام دهیم.
+        // این تابع به dCalendar متکی نیست و مستقل عمل می‌کند.
+        
+        // آرایه روزهای هر ماه جلالی
+        const jDaysInMonth = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
+        // TODO: برای دقت 100% باید سال کبیسه جلالی هم محاسبه شود
+        
+        let dayOfYear = 0;
+        for (let i = 0; i < month - 1; i++) {
+            dayOfYear += jDaysInMonth[i];
         }
+        dayOfYear += day;
+        
+        // سال میلادی متناظر (تقریبی)
+        let gYear = year + 621;
+        
+        // تاریخ 1 فروردین آن سال (تقریباً 21 مارس)
+        let gDate = new Date(gYear, 2, 21); // March 21
+        
+        // اضافه کردن روزهای گذشته از سال جلالی
+        gDate.setDate(gDate.getDate() + dayOfYear - 1);
+        
+        return gDate;
     }
 
     // --- UI NAVIGATION ---
@@ -233,6 +292,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.action-btn[data-target]').forEach(btn => btn.addEventListener('click', () => showSection(btn.dataset.target)));
     document.getElementById('back-to-home').addEventListener('click', showHomeScreen);
 
+    // --- تابع جدید برای صفحه خالی ---
+    function getEmptyStateHTML(title, message) {
+        return `
+            <div class="empty-state-container">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10.5 11.25h3M12 15v.008" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 7.5h16.5v-1.5c0-.621-.504-1.125-1.125-1.125h-14.25C4.254 4.875 3.75 5.379 3.75 6v1.5z" />
+                </svg>
+                <p>${title}</p>
+                <span>${message}</span>
+            </div>
+        `;
+    }
+
     // --- DYNAMIC CONTENT ---
     function getSectionContent(sectionId) {
         const commonInputStyle = "w-full bg-black/20 border border-border-color rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent-blue-start text-right";
@@ -246,7 +319,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         switch(sectionId) {
             case 'dashboard':
-                // --- استفاده از timestamp برای محاسبه دقیق ---
                 const expiringItems = batches.filter(item => {
                     if (!item.dateExpiryTimestamp) return false;
                     const expiryDate = new Date(item.dateExpiryTimestamp);
@@ -256,35 +328,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 const lowStockItems = batches.filter(item => item.qty <= 5)
                                            .sort((a,b) => a.qty - b.qty);
 
-                let expiryHtml = expiringItems.length > 0 ? expiringItems.map(item => `
-                    <div class="glass-card p-3 text-right text-sm expiry-alert">
-                        <p class="font-bold">${item.title} - <span class="text-red-400">انقضا: ${item.dateExpiry}</span></p>
-                    </div>`).join('') : '<p class="text-sm text-text-secondary">موردی یافت نشد.</p>';
+                if (expiringItems.length === 0 && lowStockItems.length === 0) {
+                    return getEmptyStateHTML("داشبورد خلوت است", "هیچ کالایی نزدیک به انقضا یا کمبود موجودی نیست.");
+                }
 
-                let lowStockHtml = lowStockItems.length > 0 ? lowStockItems.map(item => `
-                     <div class="glass-card p-3 text-right text-sm">
-                        <p class="font-bold">${item.title} - <span class="text-yellow-400">موجودی: ${item.qty}</span></p>
-                    </div>`).join('') : '<p class="text-sm text-text-secondary">موردی یافت نشد.</p>';
-
-                return `
-                    <div class="space-y-6">
+                let expiryHtml = expiringItems.length > 0 ? `
                         <div>
                             <h2 class="text-xl font-bold text-right mb-3">🚨 هشدار انقضا (زیر ۳۰ روز)</h2>
-                            <div class="space-y-2">${expiryHtml}</div>
-                        </div>
+                            <div class="space-y-2">${expiringItems.map(item => `
+                                <div class="glass-card p-3 text-right text-sm expiry-alert">
+                                    <p class="font-bold">${item.title} - <span class="text-red-400">انقضا: ${item.dateExpiry}</span></p>
+                                </div>`).join('')}
+                            </div>
+                        </div>` : '';
+
+                let lowStockHtml = lowStockItems.length > 0 ? `
                         <div>
                             <h2 class="text-xl font-bold text-right mb-3">🛒 پیشنهاد خرید (موجودی کمتر از ۵)</h2>
-                            <div class="space-y-2">${lowStockHtml}</div>
-                        </div>
-                    </div>`;
+                            <div class="space-y-2">${lowStockItems.map(item => `
+                                <div class="glass-card p-3 text-right text-sm">
+                                    <p class="font-bold">${item.title} - <span class="text-yellow-400">موجودی: ${item.qty}</span></p>
+                                </div>`).join('')}
+                            </div>
+                        </div>` : '';
+
+                return `<div class="space-y-6">${expiryHtml}${lowStockHtml}</div>`;
 
             case 'inventory':
-                 if (batches.length === 0) return '<p class="text-center text-text-secondary mt-10">هنوز کالایی ثبت نشده است.</p>';
+                 if (batches.length === 0) {
+                     return getEmptyStateHTML("انبار شما خالی است", "برای شروع، یک کالا از دکمه «افزودن» ثبت کنید.");
+                 }
                 return `
                     <div class="space-y-3">
                         <h2 class="text-2xl font-bold text-right mb-4">لیست موجودی</h2>
                         ${batches.sort((a, b) => (a.title > b.title) ? 1 : -1).map(item => {
-                            // --- استفاده از timestamp برای محاسبه دقیق ---
                             const expiryDate = item.dateExpiryTimestamp ? new Date(item.dateExpiryTimestamp) : null;
                             const isExpired = expiryDate && expiryDate < now;
                             const isExpiringSoon = expiryDate && expiryDate < thirtyDaysFromNow;
@@ -334,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>`;
             
             case 'report':
-                 if (batches.length === 0) return '<p class="text-center text-text-secondary mt-10">کالایی در انبار موجود نیست.</p>';
+                 if (batches.length === 0) return getEmptyStateHTML("گزارشی برای نمایش وجود ندارد", "ابتدا باید کالایی به انبار اضافه کنید.");
                 return `
                     <div class="glass-card p-4 text-center">
                         <h2 class="text-2xl font-bold mb-4">ایجاد گزارش</h2>
@@ -398,8 +475,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const dateInStr = document.getElementById('inDate').value;
         const dateExpiryStr = document.getElementById('inExpiry').value || null;
         
-        // --- بهبود منطق: ذخیره برچسب زمانی برای محاسبات ---
-        const dateInTimestamp = parseJalaliDate(dateInStr)?.getTime() || new Date().getTime(); // Fallback to now
+        if (!dateInStr) {
+            showToast('تاریخ ورود الزامی است', 'error');
+            return;
+        }
+
+        const dateInTimestamp = parseJalaliDate(dateInStr)?.getTime();
         const dateExpiryTimestamp = dateExpiryStr ? parseJalaliDate(dateExpiryStr)?.getTime() : null;
 
         const newItem = {
@@ -413,7 +494,6 @@ document.addEventListener('DOMContentLoaded', () => {
             dateIn: dateInStr, 
             dateExpiry: dateExpiryStr,
             note: document.getElementById('inNote').value.trim(),
-            // --- ذخیره داده‌های زمانی جدید ---
             dateInTimestamp: dateInTimestamp,
             dateExpiryTimestamp: dateExpiryTimestamp
         };
@@ -459,7 +539,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // --- INITIALIZATION ---
-    function updateHeader() { document.getElementById('header-date').textContent = getJalaliDate(); }
+    function updateHeader() { 
+        document.getElementById('header-date').textContent = getJalaliDate();
+        document.getElementById('app-version').textContent = APP_VERSION;
+    }
     load();
     showHomeScreen();
     
