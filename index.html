@@ -3,126 +3,203 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>مدیریت انبار - v8.0</title>
+<title>مدیریت انبار - v9.0</title>
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
-
-<style>
-/* CSS تقویم */
-.d-calendar{display:block;direction:rtl;width:250px;background-color:#fff;border-radius:4px;border:1px solid #ddd}.d-calendar[data-lang=en]{direction:ltr}.d-calendar .d-calendar-week{display:flex;padding:10px 0;border-bottom:1px solid #ddd}.d-calendar .d-calendar-week span{flex-basis:100%;text-align:center;font-size:13px;font-weight:500;color:#333}.d-calendar .d-calendar-days{display:flex;flex-wrap:wrap;padding:10px 0}.d-calendar .d-calendar-days span,.d-calendar .d-calendar-days button{flex-basis:14.2%;text-align:center;font-size:13px;font-weight:400;height:30px;line-height:30px;color:#333}.d-calendar .d-calendar-days button{cursor:pointer;background-color:transparent;border:1px solid transparent;outline:none;border-radius:50%}.d-calendar .d-calendar-days button:hover{background-color:#eee;border:1px solid #ddd}.d-calendar .d-calendar-days button:focus{background-color:#eee;border:1px solid #ccc}.d-calendar .d-calendar-days .d-calendar-today{background-color:#333;color:#fff;border:1px solid #333}.d-calendar-picker{display:inline-block;position:relative}.d-calendar-picker-main{position:absolute;outline:none;top:100%;left:50%;transform:translate(-50%,5px);z-index:9999}.d-calendar-picker-header{display:flex;align-items:center;justify-content:center;position:relative;padding:10px;background-color:#fff;border-top-left-radius:4px;border-top-right-radius:4px;border:1px solid #ddd;border-bottom:none}.d-calendar-picker-header h4{margin:0;font-size:14px;font-weight:500;color:#333}.d-calendar-picker-header button{display:block;width:30px;height:30px;border-radius:50%;border:1px solid transparent;background-color:transparent;position:absolute;top:50%;transform:translateY(-50%);cursor:pointer;outline:none}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-prev{left:5px}.d-calendar-picker-header .d-calendar-picker-prev{right:5px}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-next{right:5px}.d-calendar-picker-header .d-calendar-picker-next{left:5px}.d-calendar-picker-header button:hover{background-color:#eee;border:1px solid #ddd}.d-calendar-picker-header button:focus{background-color:#eee;border:1px solid #ccc}.d-calendar-picker-header button i{display:block;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;margin:0 auto}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-prev i{border-right:5px solid #333}.d-calendar-picker-header .d-calendar-picker-prev i{border-left:5px solid #333}.d-calendar[data-lang=en] .d-calendar-picker-header .d-calendar-picker-next i{border-left:5px solid #333}.d-calendar-picker-header .d-calendar-picker-next i{border-right:5px solid #333}
-</style>
-
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- CSS تقویم از CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/d-calendar@latest/dist/d-calendar.picker.css">
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
   :root {
-    --bg-color: #000000; --app-bg: #111111; --card-bg: rgba(38, 38, 40, 0.6);
-    --border-color: rgba(80, 80, 80, 0.4); --text-primary: #ffffff; --text-secondary: #a0a0a5;
-    --accent-blue-start: #007aff; --accent-blue-end: #0a84ff; --alert-red: #ff453a; --success-green: #34c759;
+    --bg-color: #f7f8fa;
+    --app-bg: #ffffff;
+    --card-bg: #ffffff;
+    --text-primary: #1c1c1e;
+    --text-secondary: #8a8a8e;
+    --accent-blue: #007aff;
+    --alert-red: #ff3b30;
+    --success-green: #34c759;
+    /* --- پالت جدید Claymorphism --- */
+    --shadow-light: rgba(255, 255, 255, 0.9);
+    --shadow-dark: rgba(174, 174, 192, 0.4);
+    --shadow-inset-light: rgba(255, 255, 255, 0.9);
+    --shadow-inset-dark: rgba(174, 174, 192, 0.3);
   }
-  @keyframes fluid-background {
-    0% { transform: translate(-10%, -10%) rotate(0deg); } 25% { transform: translate(10%, -10%) rotate(10deg); }
-    50% { transform: translate(10%, 10%) rotate(0deg); } 75% { transform: translate(-10%, 10%) rotate(-10deg); }
-    100% { transform: translate(-10%, -10%) rotate(0deg); }
+  body {
+    background-color: var(--bg-color);
+    font-family: 'Vazirmatn', sans-serif;
+    color: var(--text-primary);
+    padding: 12px;
+    overscroll-behavior: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-  body { background-color: var(--bg-color); font-family: 'Vazirmatn', sans-serif; color: var(--text-primary); padding: 12px; overscroll-behavior: none; }
-  #app-frame { background-color: var(--app-bg); border-radius: 40px; height: calc(100dvh - 24px); position: relative; overflow: hidden; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
-  #app-frame::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(0, 122, 255, 0.15) 0%, transparent 40%), radial-gradient(circle, rgba(52, 199, 89, 0.15) 50%, transparent 80%); animation: fluid-background 25s ease-in-out infinite; z-index: 0; }
-  .content-wrapper { position: relative; z-index: 1; backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px); height: 100%; display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+  #app-frame {
+    background-color: var(--app-bg);
+    border-radius: 40px;
+    height: calc(100dvh - 24px);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+  }
+  .content-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
   
-  /* --- شبیه‌سازی "Liquid Glass" --- */
-  .glass-card { 
-    background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; 
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-    /* انتقال نرم برای افکت لمس */
-    transition: transform 0.15s cubic-bezier(0.2, 0.0, 0.38, 0.9), box-shadow 0.15s cubic-bezier(0.2, 0.0, 0.38, 0.9);
+  /* --- طراحی جدید کارت (Clay UI) --- */
+  .clay-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+    transition: all 0.2s ease-out;
   }
-  /* افکت "فرو رفتگی" هنگام لمس */
-  .glass-card:active {
-    transform: scale(0.97);
-    box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.1);
+  .clay-card:active {
+    box-shadow: inset 4px 4px 8px var(--shadow-inset-dark), inset -4px -4px 8px var(--shadow-inset-light);
+    transform: scale(0.98);
   }
-
-  .action-btn { 
-    position: relative; overflow: hidden; padding: 16px; border-radius: 20px; font-weight: 700; 
-    color: var(--text-primary); border: 1px solid var(--border-color); 
-    box-shadow: 0px 5px 10px rgba(0,0,0,0.2), inset 0px 1px 1px rgba(255,255,255,0.1); 
-    transform-style: preserve-3d; text-align: center; font-size: 1.1rem; 
-    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  
+  /* --- طراحی جدید دکمه (Clay UI) --- */
+  .action-btn {
+    position: relative;
+    padding: 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    border: none;
+    box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+    transform-style: preserve-3d;
+    text-align: center;
+    font-size: 1.1rem;
+    transition: all 0.15s ease-out;
+    background: var(--card-bg);
   }
-  .action-btn:hover { 
-    transform: translateY(-4px) scale(1.02); 
-    box-shadow: 0px 10px 20px rgba(0,0,0,0.3), inset 0px 1px 1px rgba(255,255,255,0.1); 
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
   }
   .action-btn:active {
-    transform: translateY(1px) scale(0.95);
-    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+    transform: translateY(1px) scale(0.97);
+    box-shadow: inset 4px 4px 8px var(--shadow-inset-dark), inset -4px -4px 8px var(--shadow-inset-light);
+  }
+  .btn-primary {
+    background-image: linear-gradient(135deg, var(--accent-blue), #006ae0);
+    color: white;
+    box-shadow: 0px 8px 20px rgba(0, 122, 255, 0.3);
+  }
+  .btn-primary:hover {
+     box-shadow: 0px 10px 25px rgba(0, 122, 255, 0.4);
+  }
+  .btn-primary:active {
+    box-shadow: inset 0px 2px 4px rgba(0,0,0,0.2);
+    transform: translateY(1px) scale(0.98);
+  }
+  
+  .section-content { display: none; }
+  .section-content.active {
+      display: block;
+      animation: fadeIn 0.4s ease-in-out;
+  }
+  @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
   }
 
-  .btn-primary { background-image: linear-gradient(135deg, var(--accent-blue-start), var(--accent-blue-end)); }
-  .btn-secondary { background-color: rgba(60, 60, 67, 0.7); }
-  
-  @keyframes shimmer-glow { 0% { transform: translateX(-150%) skewX(-30deg); opacity: 0.5; } 50% { transform: translateX(150%) skewX(-30deg); opacity: 1; } 100% { transform: translateX(300%) skewX(-30deg); opacity: 0.5; } }
-  .action-btn::after { content: ''; position: absolute; top: 0; left: 0; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent); animation: shimmer-glow 4s ease-in-out infinite; }
-  .section-content { display: none; }
-  .section-content.active { display: block; animation: fadeIn 0.5s ease-in-out; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  /* --- استایل فرم‌های ورودی --- */
+  .form-input {
+    width: 100%;
+    background-color: var(--bg-color);
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 1rem;
+    color: var(--text-primary);
+    box-shadow: inset 3px 3px 6px var(--shadow-inset-dark), inset -3px -3px 6px var(--shadow-inset-light);
+    transition: all 0.2s ease;
+    appearance: none;
+  }
+  .form-input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    background-color: #fff;
+    box-shadow: 0 0 0 2px var(--accent-blue);
+  }
   .form-input-group { position: relative; }
-  .form-input-unit { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 0.9rem; }
-  .expiry-alert { border-left: 4px solid var(--alert-red); }
+  .form-input-unit {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  .form-select {
+    background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22 fill='%238a8a8e'%3E%3Cpath fill-rule=%22evenodd%22 d=%22M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%22 clip-rule=%22evenodd%22/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: center left 1rem;
+  }
 
+  /* --- استایل اعلان --- */
   #toast {
     visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center;
-    border-radius: 10px; padding: 16px; position: fixed; z-index: 10000; left: 50%; top: 50px;
-    transform: translateX(-50%); font-size: 0.9rem; font-weight: 500;
-    transition: visibility 0.5s, opacity 0.5s linear, top 0.5s ease-out; opacity: 0;
+    border-radius: 12px; padding: 16px; position: fixed; z-index: 10000; left: 50%; top: 50px;
+    transform: translateX(-50%); font-size: 0.95rem; font-weight: 600;
+    opacity: 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    transition: visibility 0.5s, opacity 0.5s, top 0.5s cubic-bezier(0.17, 0.67, 0.2, 1.25);
   }
   #toast.show { visibility: visible; opacity: 1; top: 70px; }
   #toast.success { background-color: var(--success-green); }
-  #toast.error { background-color: var(--alert-red); }
-
+  #toast.error { background-color: var(--alert-red); color: white; }
+  
+  /* --- استایل دکمه خروج و آیکون‌ها --- */
   .remove-item-btn {
-    font-size: 0.75rem; font-weight: 500; background-color: rgba(255, 69, 58, 0.2); 
-    color: var(--alert-red); border: 1px solid var(--alert-red); padding: 4px 10px;
-    border-radius: 10px; margin-top: 10px; transition: background-color 0.2s;
+    font-size: 0.75rem; font-weight: 600; background-color: rgba(255, 59, 48, 0.1); 
+    color: var(--alert-red); border: none; padding: 6px 12px;
+    border-radius: 10px; transition: all 0.2s;
   }
-  .remove-item-btn:hover { background-color: rgba(255, 69, 58, 0.4); }
-  
-  input[type="text"]::placeholder { color: var(--text-secondary); opacity: 0.5; }
-  
-  /* --- استایل آیکون‌های SVG --- */
+  .remove-item-btn:hover { background-color: rgba(255, 59, 48, 0.2); }
   .icon-style {
-    width: 1.5rem; /* 24px */
-    height: 1.5rem; /* 24px */
+    width: 1.5rem; height: 1.5rem;
     stroke-width: 2;
   }
   
-  /* --- استایل صفحه خالی (Empty State) --- */
+  /* --- استایل صفحه خالی --- */
   .empty-state-container {
-    text-align: center;
-    margin-top: 2rem; /* 32px */
-    opacity: 0.6;
+    text-align: center; margin-top: 3rem; opacity: 0.7;
     animation: fadeIn 1s ease-in-out;
   }
   .empty-state-container svg {
-    width: 6rem; /* 96px */
-    height: 6rem; /* 96px */
-    margin: 0 auto 1rem; /* 16px */
+    width: 6rem; height: 6rem; margin: 0 auto 1rem;
     stroke: var(--text-secondary);
   }
   .empty-state-container p {
-    font-size: 1.1rem; /* 18px */
-    font-weight: 500;
+    font-size: 1.1rem; font-weight: 600;
     color: var(--text-primary);
   }
   .empty-state-container span {
-    font-size: 0.9rem; /* 14px */
-    color: var(--text-secondary);
+    font-size: 0.9rem; color: var(--text-secondary);
+  }
+  
+  /* --- استایل بخش بارکد --- */
+  #reader {
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: inset 4px 4px 8px var(--shadow-inset-dark), inset -4px -4px 8px var(--shadow-inset-light);
   }
 </style>
 </head>
@@ -132,43 +209,48 @@
 
 <div id="app-frame">
   <div class="content-wrapper">
+    <!-- هدر جدید -->
     <header class="p-6 pt-8">
-        <div class="glass-card p-4">
-            <div class="flex justify-between items-center">
-                <div class="text-left flex-1"><p id="header-date" class="text-xs text-text-secondary font-medium"></p></div>
-                <div class="text-center flex-1"><h1 class="text-2xl font-extrabold" style="background: -webkit-linear-gradient(45deg, #eee, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">مدیریت انبار</h1></div>
-                <div class="text-right flex-1"><p id="app-version" class="text-xs text-text-secondary font-medium"></p></div>
+        <div class="flex justify-between items-center mb-6 px-2">
+            <div>
+                <h1 class="text-3xl font-bold">انبار من</h1>
+                <p id="header-date" class="text-sm text-text-secondary font-medium"></p>
+            </div>
+            <div class="text-left">
+                <span id="app-version" class="text-xs font-semibold text-text-secondary px-3 py-1 bg-gray-200 rounded-full"></span>
             </div>
         </div>
     </header>
 
     <main class="flex-1 overflow-y-auto px-6 pb-6">
         <div id="home-screen" class="section-content active">
-             <div class="grid grid-cols-1 gap-4">
-                <button data-target="dashboard" class="action-btn btn-primary flex items-center justify-center gap-2">
+             <div class="grid grid-cols-1 gap-5">
+                <button data-target="dashboard" class="action-btn btn-primary flex items-center justify-center gap-3">
                     <svg class="icon-style" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>
                     <span>داشبورد</span>
                 </button>
-                <button data-target="inventory" class="action-btn btn-secondary flex items-center justify-center gap-2">
+                <button data-target="inventory" class="action-btn flex items-center justify-center gap-3">
                     <svg class="icon-style" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10.5 11.25h3M12 15v.008" /><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 7.5h16.5v-1.5c0-.621-.504-1.125-1.125-1.125h-14.25C4.254 4.875 3.75 5.379 3.75 6v1.5z" /></svg>
                     <span>موجودی</span>
                 </button>
-                <button data-target="add" class="action-btn btn-secondary flex items-center justify-center gap-2">
+                <button data-target="add" class="action-btn flex items-center justify-center gap-3">
                     <svg class="icon-style" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                     <span>افزودن کالا</span>
                 </button>
-                <button data-target="scan" class="action-btn btn-secondary flex items-center justify-center gap-2">
-                    <svg class="icon-style" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.5v15a2.25 2.25 0 002.25 2.25h13.5a2.25 2.25 0 002.25-2.25v-15a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25zM3.75 9h16.5M3.75 15h16.5M7.5 4.5v15m4.5-15v15m4.5-15v15" /></svg>
-                    <span>اسکن بارکد</span>
-                </button>
-                <button data-target="report" class="action-btn btn-secondary flex items-center justify-center gap-2">
-                    <svg class="icon-style" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 013 20.625v-7.5zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v12c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 019.75 20.625v-12zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v16.5c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 0116.5 20.625v-16.5z" /></svg>
-                    <span>گزارش</span>
-                </button>
                 <div class="grid grid-cols-2 gap-4">
-                    <button data-target="import-excel" class="action-btn btn-secondary flex items-center justify-center gap-2 text-sm px-2 h-20"><span>📄</span><span>ورود کالا با اکسل</span></button>
-                    <button data-target="backup" class="action-btn btn-secondary flex items-center justify-center gap-2 text-sm px-2 h-20"><span>💾</span><span>پشتیبان‌گیری</span></button>
+                    <button data-target="scan" class="action-btn flex flex-col items-center justify-center gap-2 text-sm h-28">
+                        <svg class="icon-style" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.5v15a2.25 2.25 0 002.25 2.25h13.5a2.25 2.25 0 002.25-2.25v-15a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25zM3.75 9h16.5M3.75 15h16.5M7.5 4.5v15m4.5-15v15m4.5-15v15" /></svg>
+                        <span>اسکن بارکد</span>
+                    </button>
+                     <button data-target="import-excel" class="action-btn flex flex-col items-center justify-center gap-2 text-sm h-28">
+                        <svg class="icon-style" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                        <span>ورود با اکسل</span>
+                    </button>
                 </div>
+                 <button data-target="report" class="action-btn flex items-center justify-center gap-3">
+                    <svg class="icon-style" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 013 20.625v-7.5zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v12c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 019.75 20.625v-12zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v16.5c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 0116.5 20.625v-16.5z" /></svg>
+                    <span>گزارش‌گیری</span>
+                </button>
             </div>
         </div>
         
@@ -178,30 +260,35 @@
         <div data-id="scan" class="section-content"></div>
         <div data-id="report" class="section-content"></div>
         <div data-id="import-excel" class="section-content"></div>
-        <div data-id="backup" class="section-content"></div>
         
         <div id="back-button-container" class="mt-6 text-center" style="display: none;">
-            <button id="back-to-home" class="action-btn btn-secondary w-full max-w-xs mx-auto">بازگشت به منو</button>
+            <button id="back-to-home" class="action-btn w-full max-w-xs mx-auto">بازگشت به منو</button>
         </div>
     </main>
   </div>
 </div>
 
-<script>(function(global,factory){typeof exports==='object'&&typeof module!=='undefined'?module.exports=factory():typeof define==='function'&&define.amd?define(factory):global.dCalendar=factory()})(this,function(){'use strict';var dCalendar=function(){};return dCalendar.prototype.getToday=function(config){var date=new Date,today={year:date.getFullYear(),month:date.getMonth()+1,day:date.getDate()};return config&&config.lang!=='en'?this.convertTo(config.lang,today.year,today.month,today.day):today},dCalendar.prototype.picker=function(config){var _this=this;if(typeof config==='undefined'||typeof config.target==='undefined'||!config.target)return void console.warn('%cD-CALENDAR%c -> "target" is required.','color: #c60f0f; font-weight: bold;','color: #333; font-weight: normal;');config.lang=config.lang||'en',config.format=config.format||'yyyy/mm/dd';var target=document.querySelector(config.target);if(target===null)return void console.warn('%cD-CALENDAR%c -> "target" not found.','color: #c60f0f; font-weight: bold;','color: #333; font-weight: normal;');target.style.display='none',target.parentElement.classList.add('d-calendar-picker');var main=document.createElement('div');main.className='d-calendar-picker-main',main.setAttribute('tabindex',0);var header=document.createElement('div');header.className='d-calendar-picker-header',main.appendChild(header);var content=document.createElement('div');content.className='d-calendar-picker-content',main.appendChild(content);var calendar=_this.create(config),months=_this.getMonths(config.lang);header.innerHTML='<h4>'+months[calendar.month-1]+' '+calendar.year+'</h4>',content.appendChild(calendar.calendar),target.parentElement.appendChild(main),main.focus();var prev=document.createElement('button');prev.type='button',prev.className='d-calendar-picker-prev',prev.innerHTML='<i></i>',header.appendChild(prev);var next=document.createElement('button');next.type='button',next.className='d-calendar-picker-next',next.innerHTML='<i></i>',header.appendChild(next),prev.onclick=function(){var data={year:calendar.month===1?calendar.year-1:calendar.year,month:calendar.month>1?calendar.month-1:12,lang:config.lang};calendar=_this.create(data),header.innerHTML='<h4>'+months[calendar.month-1]+' '+calendar.year+'</h4>',header.appendChild(prev),header.appendChild(next),content.innerHTML='',content.appendChild(calendar.calendar)},next.onclick=function(){var data={year:calendar.month===12?calendar.year+1:calendar.year,month:calendar.month<12?calendar.month+1:1,lang:config.lang};calendar=_this.create(data),header.innerHTML='<h4>'+months[calendar.month-1]+' '+calendar.year+'</h4>',header.appendChild(prev),header.appendChild(next),content.innerHTML='',content.appendChild(calendar.calendar)},content.onclick=function(e){e.stopPropagation();if(e.target.tagName==='BUTTON'&&e.target.hasAttribute('data-day')){var day=e.target.getAttribute('data-day'),date={year:calendar.year,month:calendar.month,day:parseInt(day)};date.month<10&&(date.month='0'+date.month),date.day<10&&(date.day='0'+date.day);var value=config.format;value=value.replace('yyyy',date.year),value=value.replace('mm',date.month),value=value.replace('dd',date.day),target.value=value,main.remove(),target.style.display='block';if(config.done)return config.done(date)}},main.onblur=function(e){e.stopPropagation(),main.remove(),target.style.display='block'}},dCalendar.prototype.create=function(config){config||(config={});var today=this.getToday(config),year=config.year||today.year,month=config.month||today.month,lang=config.lang||'en';if(typeof year!=='number'||typeof month!=='number'||year<1||month<1||month>12)return void console.warn('%cD-CALENDAR%c -> Invalid date.','color: #c60f0f; font-weight: bold;','color: #333; font-weight: normal;');var main=document.createElement('div');main.className='d-calendar',main.setAttribute('data-lang',lang);for(var weekDays=this.getWeekDays(lang),week=document.createElement('div'),i=0;i<weekDays.length;i++)week.innerHTML+='<span>'+weekDays[i]+'</span>';week.className='d-calendar-week',main.appendChild(week);var num=this.getNumOfDays(lang,year,month),firstDay=num.firstDay,days=document.createElement('div');days.className='d-calendar-days';for(var i=firstDay;i>1;i--)days.innerHTML+='<span></span>';for(var i=1;i<=num.days;i++){var className='';i===today.day&&month===today.month&&year===today.year&&(className+=' d-calendar-today'),days.innerHTML+='<button type="button" class="'+className+'" data-day="'+i+'">'+i+'</button>'}return main.appendChild(days),{year:year,month:month,calendar:main}},dCalendar.prototype.getNumOfDays=function(lang,year,month){var date=this.convertTo('en',year,month,1),firstDay,days;if(lang==='fa'||lang==='ar'){var jdate=this.convertTo('fa',year,month,1),num=[31,31,31,31,31,31,30,30,30,30,30,this.isLeap(date.year+1)?30:29];firstDay=this.getWeekDay(date),days=num[jdate.month-1]}else{var num=[31,this.isLeap(year)?29:28,31,30,31,30,31,31,30,31,30,31];firstDay=this.getWeekDay(date),days=num[month-1]}return{days:days,firstDay:firstDay}},dCalendar.prototype.isLeap=function(year){if(typeof year!=='number'||year<1);else return year%4===0&&year%100!==0||year%400===0},dCalendar.prototype.getWeekDay=function(date){if(typeof date!=='object');else return new Date(date.year,date.month-1,date.day).getDay()||7},dCalendar.prototype.convertTo=function(lang,year,month,day){var gYear=year,gMonth=month,gDay=day,jYear=year,jMonth=month,jDay=day,gDays=[0,31,59,90,120,151,181,212,243,273,304,334],jDays=[0,31,62,93,124,155,186,216,246,276,306,336];if(lang==='fa'||lang==='ar'){for(var i,gDayOfYear=gDays[gMonth-1]+gDay,jDayOfYear=gDayOfYear-79,i=0;this.isLeap(gYear)&&gMonth>2&&gDayOfYear++,jDayOfYear<=0?(jDayOfYear=jDayOfYear+365+(this.isLeap(gYear-1)?1:0),jYear=gYear-622):jYear=gYear-621,jDayOfYear>(this.isLeap(jYear)?366:365)&&(jDayOfYear=jDayOfYear-(this.isLeap(jYear)?366:365),jYear++),i<12;i++)if(jDayOfYear<=jDays[i]){jDay=jDayOfYear-(i>0?jDays[i-1]:0),jMonth=i;break}return{year:jYear,month:jMonth,day:jDay}}if(lang==='en'){for(var i,jDayOfYear=(jMonth-1)*31+jDay,gDayOfYear=jDayOfYear+79,i=0;jMonth>7&&(jDayOfYear-=jMonth-7),jYear+=this.isLeap(jYear-1)?1:0,gDayOfYear>365?(gDayOfYear=gDayOfYear-(365+(this.isLeap(jYear)?1:0)),gYear=jYear+622):gYear=jYear+621,i<12;i++){var gDaysNum=gDays[i]+(i>1&&this.isLeap(gYear)?1:0);if(gDayOfYear<=gDaysNum){gDay=gDayOfYear-(i>0?gDays[i-1]:0),gMonth=i;break}}return{year:gYear,month:gMonth,day:gDay}}return{year:year,month:month,day:day}},dCalendar.prototype.getMonths=function(lang){return lang==='fa'?['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند']:lang==='ar'?['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']:['January','February','March','April','May','June','July','August','September','October','November','December']},dCalendar.prototype.getWeekDays=function(lang){return lang==='fa'?['ش','ی','د','س','چ','پ','ج']:lang==='ar'?['الأحد','الأثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت']:['Mo','Tu','We','Th','Fr','Sa','Su']},new dCalendar});</script>
+<!-- کتابخانه‌های جاوااسکریپت از CDN -->
+<script src="https://cdn.jsdelivr.net/npm/d-calendar@latest/dist/d-calendar.picker.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<!-- منطق اصلی اپلیکیشن -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // --- نسخه‌بندی جدید ---
-    const APP_VERSION = 'v8.0';
+    // --- نسخه‌بندی ---
+    const APP_VERSION = 'v9.0';
     
     // --- DATA MANAGEMENT ---
-    const KEY_BATCHES = 'wh_final_batches_v4';
-    const KEY_CATEGORIES = 'wh_final_categories_v4';
+    const KEY_BATCHES = 'wh_final_batches_v5';
+    const KEY_CATEGORIES = 'wh_final_categories_v5';
     let batches = [];
-    let categories = ['بهداشتی و شوینده', 'خوراکی', 'ابزارآلات', 'لوازم التحریر'];
+    // --- گروه‌های جدید ---
+    let categories = ['شوینده', 'خوراکی', 'نوشیدنی', 'لوازم و ابزار'];
+    const units = ['وزن', 'حجم'];
+    const excelTemplateHeaders = ['کد کالا', 'نام کالا', 'برند کالا', 'گروه', 'تعداد', 'واحد اندازه‌گیری', 'مقدار کالا', 'تاریخ ورود', 'تاریخ انقضاء', 'توضیحات'];
+
 
     function save() {
         localStorage.setItem(KEY_BATCHES, JSON.stringify(batches));
@@ -214,7 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (savedCategories) categories = savedCategories;
     }
 
-    // --- تابع اعلان (Toast) ---
     function showToast(message, type = 'success') {
         const toast = document.getElementById('toast');
         toast.textContent = message;
@@ -229,20 +315,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const date = new Date();
         const year = new Intl.DateTimeFormat('fa-IR-u-nu-latn', { year: 'numeric' }).format(date);
         const month = new Intl.DateTimeFormat('fa-IR-u-nu-latn', { month: 'long' }).format(date);
-        const seasons = { 'فروردین': 'بهار', 'اردیبهشت': 'بهار', 'خرداد': 'بهار', 'تیر': 'تابستان', 'مرداد': 'تابستان', 'شهریور': 'تابستان', 'مهر': 'پاییز', 'آبان': 'پاییز', 'آذر': 'پاییز', 'دی': 'زمستان', 'بهمن': 'زمستان', 'اسفند': 'زمستان'};
-        return `${seasons[month]} ${year}`;
+        return `${month} ${year}`;
     }
     
-    // --- بهبود منطق تاریخ ---
+    // --- تابع دقیق‌تر برای تبدیل تاریخ جلالی به میلادی ---
     function parseJalaliDate(jalaliStr) {
-        if (!jalaliStr) return null;
-        const [year, month, day] = jalaliStr.split('/').map(Number);
+        if (!jalaliStr || typeof jalaliStr !== 'string') return null;
+        
+        // پشتیبانی از هر دو فرمت / و -
+        const parts = jalaliStr.split(/[\/-]/); 
+        if (parts.length !== 3) return null;
+        
+        const [year, month, day] = parts.map(Number);
         if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
-        
-        // کتابخانه dCalendar یک تابع تبدیل داخلی ندارد،
-        // بنابراین ما باید یک تبدیل تقریبی میلادی برای محاسبات انجام دهیم.
-        // این تابع به dCalendar متکی نیست و مستقل عمل می‌کند.
-        
+
+        // محاسبه تقریبی سال میلادی
+        let gYear = year + 621;
+
         // آرایه روزهای هر ماه جلالی
         const jDaysInMonth = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
         // TODO: برای دقت 100% باید سال کبیسه جلالی هم محاسبه شود
@@ -253,23 +342,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         dayOfYear += day;
         
-        // سال میلادی متناظر (تقریبی)
-        let gYear = year + 621;
-        
         // تاریخ 1 فروردین آن سال (تقریباً 21 مارس)
-        let gDate = new Date(gYear, 2, 21); // March 21
+        // برای جلوگیری از خطای منطقه زمانی از UTC استفاده می‌کنیم
+        let gDate = new Date(Date.UTC(gYear, 2, 21)); // March 21
         
         // اضافه کردن روزهای گذشته از سال جلالی
-        gDate.setDate(gDate.getDate() + dayOfYear - 1);
+        gDate.setUTCDate(gDate.getUTCDate() + dayOfYear - 1);
         
         return gDate;
     }
+    
+    function getTimestamp(jalaliStr) {
+        const date = parseJalaliDate(jalaliStr);
+        return date ? date.getTime() : null;
+    }
+
 
     // --- UI NAVIGATION ---
     const homeScreen = document.getElementById('home-screen');
     const backButtonContainer = document.getElementById('back-button-container');
+    let html5QrCode = null; // برای نگهداری اسکنر
     
     function showSection(targetId) {
+        // --- توقف اسکنر هنگام خروج از صفحه ---
+        if (html5QrCode && html5QrCode.isScanning) {
+            html5QrCode.stop().catch(err => console.log("Gagal stop scanner", err));
+            html5QrCode = null;
+        }
+
         homeScreen.classList.remove('active');
         document.querySelectorAll('.section-content[data-id]').forEach(el => el.classList.remove('active'));
         const targetSection = document.querySelector(`.section-content[data-id="${targetId}"]`);
@@ -283,6 +383,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showHomeScreen() {
+        if (html5QrCode && html5QrCode.isScanning) {
+            html5QrCode.stop().catch(err => console.log("Gagal stop scanner", err));
+            html5QrCode = null;
+        }
         document.querySelectorAll('.section-content[data-id]').forEach(el => { el.classList.remove('active'); el.innerHTML = ''; });
         homeScreen.classList.add('active');
         backButtonContainer.style.display = 'none';
@@ -292,7 +396,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.action-btn[data-target]').forEach(btn => btn.addEventListener('click', () => showSection(btn.dataset.target)));
     document.getElementById('back-to-home').addEventListener('click', showHomeScreen);
 
-    // --- تابع جدید برای صفحه خالی ---
     function getEmptyStateHTML(title, message) {
         return `
             <div class="empty-state-container">
@@ -300,18 +403,17 @@ document.addEventListener('DOMContentLoaded', () => {
                   <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10.5 11.25h3M12 15v.008" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 7.5h16.5v-1.5c0-.621-.504-1.125-1.125-1.125h-14.25C4.254 4.875 3.75 5.379 3.75 6v1.5z" />
                 </svg>
-                <p>${title}</p>
-                <span>${message}</span>
+                <p class="mt-4">${title}</p>
+                <span class="block mt-1">${message}</span>
             </div>
         `;
     }
 
     // --- DYNAMIC CONTENT ---
     function getSectionContent(sectionId) {
-        const commonInputStyle = "w-full bg-black/20 border border-border-color rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent-blue-start text-right";
-        const commonSelectStyle = `w-full bg-black/20 border border-border-color rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent-blue-start text-right appearance-none bg-no-repeat bg-[center_left_1rem]`;
-        const commonButtonStyle = "action-btn btn-primary py-3";
-        const selectArrowIcon = `background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22 fill='%23a0a0a5'%3E%3Cpath fill-rule=%22evenodd%22 d=%22M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%22 clip-rule=%22evenodd%22/%3E%3C/svg%3E');`;
+        const commonInputStyle = "form-input";
+        const commonSelectStyle = `form-input form-select`;
+        const commonButtonStyle = "action-btn btn-primary py-3.5";
         
         const now = new Date();
         const thirtyDaysFromNow = new Date();
@@ -335,9 +437,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 let expiryHtml = expiringItems.length > 0 ? `
                         <div>
                             <h2 class="text-xl font-bold text-right mb-3">🚨 هشدار انقضا (زیر ۳۰ روز)</h2>
-                            <div class="space-y-2">${expiringItems.map(item => `
-                                <div class="glass-card p-3 text-right text-sm expiry-alert">
-                                    <p class="font-bold">${item.title} - <span class="text-red-400">انقضا: ${item.dateExpiry}</span></p>
+                            <div class="space-y-3">${expiringItems.map(item => `
+                                <div class="clay-card p-3 text-right text-sm border-r-4 border-red-500">
+                                    <p class="font-bold">${item.title} - <span class="text-red-600">انقضا: ${item.dateExpiry}</span></p>
                                 </div>`).join('')}
                             </div>
                         </div>` : '';
@@ -345,9 +447,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 let lowStockHtml = lowStockItems.length > 0 ? `
                         <div>
                             <h2 class="text-xl font-bold text-right mb-3">🛒 پیشنهاد خرید (موجودی کمتر از ۵)</h2>
-                            <div class="space-y-2">${lowStockItems.map(item => `
-                                <div class="glass-card p-3 text-right text-sm">
-                                    <p class="font-bold">${item.title} - <span class="text-yellow-400">موجودی: ${item.qty}</span></p>
+                            <div class="space-y-3">${lowStockItems.map(item => `
+                                <div class="clay-card p-3 text-right text-sm border-r-4 border-yellow-500">
+                                    <p class="font-bold">${item.title} - <span class="text-yellow-600">موجودی: ${item.qty}</span></p>
                                 </div>`).join('')}
                             </div>
                         </div>` : '';
@@ -359,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
                      return getEmptyStateHTML("انبار شما خالی است", "برای شروع، یک کالا از دکمه «افزودن» ثبت کنید.");
                  }
                 return `
-                    <div class="space-y-3">
+                    <div class="space-y-4">
                         <h2 class="text-2xl font-bold text-right mb-4">لیست موجودی</h2>
                         ${batches.sort((a, b) => (a.title > b.title) ? 1 : -1).map(item => {
                             const expiryDate = item.dateExpiryTimestamp ? new Date(item.dateExpiryTimestamp) : null;
@@ -368,23 +470,28 @@ document.addEventListener('DOMContentLoaded', () => {
                             
                             let expiryClass = '';
                             if(isExpired) expiryClass = 'text-gray-500 font-bold';
-                            else if(isExpiringSoon) expiryClass = 'text-red-400 font-bold';
+                            else if(isExpiringSoon) expiryClass = 'text-red-500 font-bold';
                             
+                            // --- نمایش واحد و مقدار ---
+                            let amountDisplay = '';
+                            if (item.unit === 'وزن' && item.amount) amountDisplay = `<span><strong>مقدار:</strong> ${item.amount} کیلوگرم</span>`;
+                            if (item.unit === 'حجم' && item.amount) amountDisplay = `<span><strong>مقدار:</strong> ${item.amount} لیتر</span>`;
+
                             return `
-                            <div class="glass-card p-3 text-right ${ isExpired ? 'opacity-50 border-red-800' : ''}">
+                            <div class="clay-card p-4 text-right ${ isExpired ? 'opacity-60' : ''}">
                                 <div class="flex justify-between items-start">
                                   <div>
-                                    <p class="font-bold">${item.title} <span class="text-sm text-text-secondary">${item.brand || ''}</span></p>
-                                    <div class="text-xs text-text-secondary mt-2 grid grid-cols-2 gap-1">
+                                    <p class="font-bold text-lg">${item.title} <span class="text-sm text-text-secondary">${item.brand || ''}</span></p>
+                                    ${item.barcode ? `<p class="text-xs text-text-secondary mt-1 font-mono">${item.barcode}</p>` : ''}
+                                    <div class="text-sm text-text-secondary mt-3 grid grid-cols-2 gap-2">
                                         <span><strong>دسته:</strong> ${item.category}</span>
                                         <span><strong>تعداد:</strong> ${item.qty}</span>
-                                        ${item.weight ? `<span><strong>وزن:</strong> ${item.weight} ک.گ</span>` : ''}
-                                        ${item.volume ? `<span><strong>حجم:</strong> ${item.volume} ل</span>` : ''}
+                                        ${amountDisplay}
                                         <span><strong>ورود:</strong> ${item.dateIn}</span>
                                         ${item.dateExpiry ? `<span class="${expiryClass}"><strong>انقضا:</strong> ${item.dateExpiry}</span>` : ''}
                                     </div>
                                   </div>
-                                  <div>
+                                  <div class="flex-shrink-0">
                                       <button data-id="${item.id}" class="remove-item-btn">ثبت خروج</button>
                                   </div>
                                 </div>
@@ -394,63 +501,117 @@ document.addEventListener('DOMContentLoaded', () => {
 
             case 'add':
                 return `
-                    <div class="glass-card p-4 space-y-4">
+                    <div class="clay-card p-5 space-y-5">
                         <h2 class="text-2xl font-bold text-right">افزودن کالا</h2>
                         <form id="addForm" class="space-y-4">
-                            <div><label class="block text-sm font-medium mb-1">عنوان کالا</label><input type="text" id="inTitle" class="${commonInputStyle}" required></div>
+                            <div><label class="block text-sm font-medium mb-1">کد کالا (اختیاری)</label><input type="text" id="inBarcode" class="${commonInputStyle}" placeholder="بارکد را اسکن کنید یا وارد نمایید"></div>
+                            <div><label class="block text-sm font-medium mb-1">نام کالا *</label><input type="text" id="inTitle" class="${commonInputStyle}" required></div>
                             <div><label class="block text-sm font-medium mb-1">برند / مدل</label><input type="text" id="inBrand" class="${commonInputStyle}"></div>
-                            <div><label class="block text-sm font-medium mb-1">دسته‌بندی ▾</label><select id="inCategory" class="${commonSelectStyle}" style="${selectArrowIcon}">${categories.map(c => `<option value="${c}">${c}</option>`).join('')}<option value="add_new">افزودن به دسته‌بندی...</option></select></div>
-                            <div><label class="block text-sm font-medium mb-1">تعداد</label><div class="form-input-group"><input type="number" id="inQty" min="1" class="${commonInputStyle}" required><span class="form-input-unit">عدد</span></div></div>
-                            <div><label class="block text-sm font-medium mb-1">وزن</label><div class="form-input-group"><input type="number" step="0.01" id="inWeight" class="${commonInputStyle}"><span class="form-input-unit">کیلوگرم</span></div></div>
-                            <div><label class="block text-sm font-medium mb-1">حجم</label><div class="form-input-group"><input type="number" step="0.01" id="inVolume" class="${commonInputStyle}"><span class="form-input-unit">لیتر</span></div></div>
-                            <div><label class="block text-sm font-medium mb-1">تاریخ ورود</label><input type="text" id="inDate" class="${commonInputStyle}" readonly required placeholder="روز/ماه/سال"></div>
-                            <div><label class="block text-sm font-medium mb-1">تاریخ انقضا (اختیاری)</label><input type="text" id="inExpiry" class="${commonInputStyle}" readonly placeholder="روز/ماه/سال"></div>
-                            <div><label class="block text-sm font-medium mb-1">توضیحات (اختیاری)</label><textarea id="inNote" rows="2" class="${commonInputStyle}"></textarea></div>
+                            <div><label class="block text-sm font-medium mb-1">گروه *</label><select id="inCategory" class="${commonSelectStyle}">${categories.map(c => `<option value="${c}">${c}</option>`).join('')}<option value="add_new">افزودن گروه جدید...</option></select></div>
+                            <div><label class="block text-sm font-medium mb-1">تعداد *</label><input type="number" id="inQty" min="1" class="${commonInputStyle}" required></div>
+                            
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">واحد اندازه‌گیری</label>
+                                    <select id="inUnit" class="${commonSelectStyle}">
+                                        <option value="">ندارد</option>
+                                        ${units.map(u => `<option value="${u}">${u}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">مقدار کالا</label>
+                                    <div class="form-input-group">
+                                        <input type="number" step="0.01" id="inAmount" class="${commonInputStyle}">
+                                        <span id="unit-label" class="form-input-unit" style="display: none;"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div><label class="block text-sm font-medium mb-1">تاریخ ورود *</label><input type="text" id="inDate" class="${commonInputStyle}" readonly required placeholder="روز/ماه/سال"></div>
+                            <div><label class="block text-sm font-medium mb-1">تاریخ انقضا</label><input type="text" id="inExpiry" class="${commonInputStyle}" readonly placeholder="روز/ماه/سال"></div>
+                            <div><label class="block text-sm font-medium mb-1">توضیحات</label><textarea id="inNote" rows="2" class="${commonInputStyle}"></textarea></div>
+                            
                             <div><button type="submit" class="${commonButtonStyle} w-full mt-2">ثبت کالا</button></div>
                         </form>
                     </div>`;
             
+            case 'scan':
+                return `
+                    <div class="space-y-4">
+                        <h2 class="text-2xl font-bold text-right mb-2">اسکن بارکد</h2>
+                        <div id="reader" class="w-full"></div>
+                        <p id="scan-status" class="text-center text-text-secondary text-sm">دوربین را به سمت بارکد بگیرید...</p>
+                    </div>`;
+
+            case 'import-excel':
+                return `
+                    <div class="space-y-4">
+                        <h2 class="text-2xl font-bold text-right mb-2">ورود دسته‌جمعی با اکسل</h2>
+                        <div class="clay-card p-5 space-y-4">
+                            <p class="text-sm text-text-secondary">برای ورود دسته‌جمعی، ابتدا فایل الگو را دانلود کرده و اطلاعات کالاها را مطابق آن کامل کنید. سپس فایل را بارگذاری نمایید.</p>
+                            
+                            <button id="download-template" class="${commonButtonStyle} w-full">دانلود فایل الگو (Template)</button>
+                            
+                            <div class="mt-4">
+                                <label for="excel-upload" class="action-btn w-full flex items-center justify-center gap-2 cursor-pointer">
+                                    <svg class="icon-style" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l-3 3m3-3l3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" /></svg>
+                                    <span>انتخاب فایل اکسل...</span>
+                                </label>
+                                <input type="file" id="excel-upload" class="hidden" accept=".xlsx, .xls">
+                                <p id="file-name" class="text-center text-sm text-text-secondary mt-2"></p>
+                            </div>
+                            
+                            <button id="process-excel" class="action-btn btn-primary w-full" style="display: none;">بارگذاری و ثبت کالاها</button>
+                        </div>
+                    </div>`;
+
             case 'report':
                  if (batches.length === 0) return getEmptyStateHTML("گزارشی برای نمایش وجود ندارد", "ابتدا باید کالایی به انبار اضافه کنید.");
                 return `
-                    <div class="glass-card p-4 text-center">
-                        <h2 class="text-2xl font-bold mb-4">ایجاد گزارش</h2>
-                        <p class="text-text-secondary mb-4">برای ایجاد گزارش، بازه زمانی مورد نظر خود را انتخاب کنید.</p>
-                        <form id="reportForm" class="space-y-4">
-                           <div><label class="block text-sm font-medium mb-1 text-right">از تاریخ</label><input type="text" id="repFrom" class="${commonInputStyle}" readonly placeholder="روز/ماه/سال"></div>
-                           <div><label class="block text-sm font-medium mb-1 text-right">تا تاریخ</label><input type="text" id="repTo" class="${commonInputStyle}" readonly placeholder="روز/ماه/سال"></div>
-                           <button type="submit" class="${commonButtonStyle} w-full">ایجاد گزارش</button>
-                        </form>
-                        <p class="text-xs text-text-secondary text-right mt-4">توجه: بخش گزارش‌گیری هنوز در حال توسعه است.</p>
+                    <div class="clay-card p-5 text-center">
+                        <h2 class="text-2xl font-bold mb-4">گزارش‌گیری</h2>
+                        <p class="text-text-secondary mb-4">این بخش در حال توسعه است و در نسخه‌های آینده فعال خواهد شد.</p>
                     </div>`;
-            
-            case 'scan':
-            case 'import-excel':
-            case 'backup':
-                 return `<div class="glass-card p-4 text-center"><h2 class="text-2xl font-bold">این بخش در حال توسعه است</h2></div>`;
         }
     }
 
     // --- EVENT LISTENERS & HANDLERS ---
     function attachEventListeners(sectionId) {
-        setTimeout(() => {
-            if (typeof dCalendar === 'undefined') { console.error("dCalendar library not loaded."); return; }
+        // --- رفع باگ تقویم ---
+        if (typeof dCalendar === 'undefined') { 
+            console.error("dCalendar library not loaded."); 
+        } else {
             if (sectionId === 'add') {
-                dCalendar.picker({ target: '#inDate', lang: 'fa' });
-                dCalendar.picker({ target: '#inExpiry', lang: 'fa' });
+                dCalendar.picker({ target: '#inDate', lang: 'fa', format: 'yyyy/mm/dd' });
+                dCalendar.picker({ target: '#inExpiry', lang: 'fa', format: 'yyyy/mm/dd' });
             }
              if (sectionId === 'report' && batches.length > 0) {
-                dCalendar.picker({ target: '#repFrom', lang: 'fa' });
-                dCalendar.picker({ target: '#repTo', lang: 'fa' });
+                dCalendar.picker({ target: '#repFrom', lang: 'fa', format: 'yyyy/mm/dd' });
+                dCalendar.picker({ target: '#repTo', lang: 'fa', format: 'yyyy/mm/dd' });
             }
-        }, 50);
+        }
 
         if (sectionId === 'add') {
             document.getElementById('addForm').addEventListener('submit', handleAddItem);
-             const categorySelect = document.getElementById('inCategory');
+            
+            // --- منطق نمایش واحد (کیلوگرم/لیتر) ---
+            document.getElementById('inUnit').addEventListener('change', (e) => {
+                const unitLabel = document.getElementById('unit-label');
+                if (e.target.value === 'وزن') {
+                    unitLabel.textContent = 'کیلوگرم';
+                    unitLabel.style.display = 'block';
+                } else if (e.target.value === 'حجم') {
+                    unitLabel.textContent = 'لیتر';
+                    unitLabel.style.display = 'block';
+                } else {
+                    unitLabel.style.display = 'none';
+                }
+            });
+
+            const categorySelect = document.getElementById('inCategory');
             categorySelect.addEventListener('change', () => {
                  if (categorySelect.value === 'add_new') {
-                    const newCategory = prompt('نام دسته‌بندی جدید را وارد کنید:');
+                    const newCategory = prompt('نام گروه جدید را وارد کنید:');
                     if (newCategory && newCategory.trim() !== '' && !categories.includes(newCategory)) {
                         categories.push(newCategory.trim()); save();
                         const newOption = new Option(newCategory.trim(), newCategory.trim(), true, true);
@@ -467,7 +628,167 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         }
+
+        if (sectionId === 'scan') {
+            startScanner();
+        }
+
+        if (sectionId === 'import-excel') {
+            document.getElementById('download-template').addEventListener('click', handleFileDownload);
+            const fileInput = document.getElementById('excel-upload');
+            const processBtn = document.getElementById('process-excel');
+            
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) {
+                    document.getElementById('file-name').textContent = fileInput.files[0].name;
+                    processBtn.style.display = 'block';
+                } else {
+                    document.getElementById('file-name').textContent = '';
+                    processBtn.style.display = 'none';
+                }
+            });
+            processBtn.addEventListener('click', () => handleFileUpload(fileInput.files[0]));
+        }
     }
+    
+    // --- منطق جدید برای اسکن بارکد ---
+    function startScanner() {
+        const statusEl = document.getElementById('scan-status');
+        html5QrCode = new Html5Qrcode("reader");
+        const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+        const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+            statusEl.textContent = `کد یافت شد: ${decodedText}`;
+            html5QrCode.stop();
+            html5QrCode = null;
+            
+            // بررسی موجودی کالا
+            const existingItemIndex = batches.findIndex(item => item.barcode === decodedText);
+            if (existingItemIndex > -1) {
+                // کالا موجود است، ثبت خروج
+                handleRemoveItem(batches[existingItemIndex].id, `کالای "${batches[existingItemIndex].title}" یافت شد. `);
+            } else {
+                // کالا جدید است، انتقال به فرم افزودن
+                showSection('add');
+                // پیش‌-پر کردن فرم
+                setTimeout(() => {
+                    document.getElementById('inBarcode').value = decodedText;
+                    showToast('کالای جدید اسکن شد. لطفا اطلاعات را تکمیل کنید.', 'success');
+                }, 100); // تاخیر کوچک برای اطمینان از رندر شدن فرم
+            }
+        };
+
+        const qrCodeErrorCallback = (errorMessage) => {
+            // console.log(errorMessage);
+        };
+
+        html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback, qrCodeErrorCallback)
+            .catch(err => {
+                statusEl.textContent = "خطا در دسترسی به دوربین. لطفا دسترسی بدهید.";
+                console.error(err);
+            });
+    }
+
+    // --- منطق جدید برای دانلود الگو اکسل ---
+    function handleFileDownload() {
+        const wb = XLSX.utils.book_new();
+        const wsData = [excelTemplateHeaders];
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        XLSX.utils.book_append_sheet(wb, ws, "Template");
+        XLSX.writeFile(wb, "Template-Anbar.xlsx");
+        showToast("فایل الگو دانلود شد", "success");
+    }
+
+    // --- منطق جدید برای بارگذاری اکسل ---
+    function handleFileUpload(file) {
+        if (!file) {
+            showToast("فایلی انتخاب نشده است", "error");
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // خواندن به صورت آرایه
+
+            if (JSON.stringify(jsonData[0]) !== JSON.stringify(excelTemplateHeaders)) {
+                showToast("ساختار فایل اکسل با الگو مطابقت ندارد. لطفا فایل الگو را دانلود و استفاده کنید.", "error");
+                return;
+            }
+
+            const newItems = [];
+            const errors = [];
+            
+            // شروع از ردیف دوم (ایندکس 1) چون ردیف اول هدر است
+            for (let i = 1; i < jsonData.length; i++) {
+                const row = jsonData[i];
+                if (row.length === 0) continue; // ردیف خالی
+
+                const newItem = {};
+                // نگاشت ستون‌ها بر اساس هدر
+                excelTemplateHeaders.forEach((header, index) => {
+                    newItem[header] = row[index];
+                });
+
+                // --- اعتبارسنجی ---
+                if (!newItem['نام کالا'] || !newItem['گروه'] || !newItem['تعداد'] || !newItem['تاریخ ورود']) {
+                    errors.push(`ردیف ${i + 1}: فیلدهای اجباری (نام، گروه، تعداد، تاریخ ورود) پر نشده‌اند.`);
+                    continue;
+                }
+                if (!categories.includes(newItem['گروه'])) {
+                    errors.push(`ردیف ${i + 1}: گروه "${newItem['گروه']}" نامعتبر است.`);
+                    continue;
+                }
+                if (newItem['واحد اندازه‌گیری'] && !units.includes(newItem['واحد اندازه‌گیری'])) {
+                     errors.push(`ردیف ${i + 1}: واحد اندازه‌گیری "${newItem['واحد اندازه‌گیری']}" نامعتبر است (فقط وزن یا حجم).`);
+                    continue;
+                }
+
+                const dateInTimestamp = getTimestamp(newItem['تاریخ ورود']);
+                const dateExpiryTimestamp = getTimestamp(newItem['تاریخ انقضاء']);
+
+                if (!dateInTimestamp) {
+                    errors.push(`ردیف ${i + 1}: فرمت تاریخ ورود نامعتبر است (مثال: 1403/01/20).`);
+                    continue;
+                }
+                if (newItem['تاریخ انقضاء'] && !dateExpiryTimestamp) {
+                    errors.push(`ردیف ${i + 1}: فرمت تاریخ انقضا نامعتبر است.`);
+                    continue;
+                }
+
+                newItems.push({
+                    id: `id_${Date.now()}_${i}`,
+                    barcode: newItem['کد کالا'] || null,
+                    title: newItem['نام کالا'],
+                    brand: newItem['برند کالا'] || null,
+                    category: newItem['گروه'],
+                    qty: parseFloat(newItem['تعداد']) || 0,
+                    unit: newItem['واحد اندازه‌گیری'] || null,
+                    amount: parseFloat(newItem['مقدار کالا']) || null,
+                    dateIn: newItem['تاریخ ورود'],
+                    dateExpiry: newItem['تاریخ انقضاء'] || null,
+                    note: newItem['توضیحات'] || null,
+                    dateInTimestamp: dateInTimestamp,
+                    dateExpiryTimestamp: dateExpiryTimestamp
+                });
+            }
+
+            if (errors.length > 0) {
+                showToast(`خطا در بارگذاری: ${errors[0]}...`, 'error');
+                console.error("خطاهای بارگذاری اکسل:", errors.join("\n"));
+            } else {
+                batches = [...newItems, ...batches]; // افزودن کالاهای جدید به ابتدای لیست
+                save();
+                showToast(`${newItems.length} کالا با موفقیت از اکسل اضافه شد.`, 'success');
+                showSection('inventory');
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
 
     function handleAddItem(e) {
         e.preventDefault();
@@ -480,17 +801,18 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const dateInTimestamp = parseJalaliDate(dateInStr)?.getTime();
-        const dateExpiryTimestamp = dateExpiryStr ? parseJalaliDate(dateExpiryStr)?.getTime() : null;
+        const dateInTimestamp = getTimestamp(dateInStr);
+        const dateExpiryTimestamp = getTimestamp(dateExpiryStr);
 
         const newItem = {
             id: 'id_' + Date.now(),
+            barcode: document.getElementById('inBarcode').value.trim() || null,
             title: document.getElementById('inTitle').value.trim(), 
             brand: document.getElementById('inBrand').value.trim(),
             category: document.getElementById('inCategory').value, 
             qty: parseFloat(document.getElementById('inQty').value) || 0,
-            weight: parseFloat(document.getElementById('inWeight').value) || null, 
-            volume: parseFloat(document.getElementById('inVolume').value) || null,
+            unit: document.getElementById('inUnit').value || null,
+            amount: parseFloat(document.getElementById('inAmount').value) || null,
             dateIn: dateInStr, 
             dateExpiry: dateExpiryStr,
             note: document.getElementById('inNote').value.trim(),
@@ -504,12 +826,12 @@ document.addEventListener('DOMContentLoaded', () => {
         showHomeScreen();
     }
     
-    function handleRemoveItem(itemId) {
+    function handleRemoveItem(itemId, promptPrefix = '') {
         const itemIndex = batches.findIndex(b => b.id === itemId);
         if (itemIndex === -1) return;
         
         const item = batches[itemIndex];
-        const qtyToRemoveStr = prompt(`چه تعداد از کالای "${item.title}" خارج/مصرف شد؟\nموجودی فعلی: ${item.qty}`, "1");
+        const qtyToRemoveStr = prompt(`${promptPrefix}چه تعداد از کالای "${item.title}" خارج/مصرف شد؟\nموجودی فعلی: ${item.qty}`, "1");
         
         if (qtyToRemoveStr === null) return; 
         
@@ -549,6 +871,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+<!-- اسکریپت ثبت سرویس ورکر (PWA) -->
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
